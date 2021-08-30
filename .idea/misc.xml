@@ -4,12 +4,25 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/et_rounded_back.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/ic_back_arrow.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/ic_exit.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/logo.xml" value="0.2203125" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/magnifier.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/message.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/phone.xml" value="0.2203125" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/rounded_corner_back.xml" value="0.2203125" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/drawable/rounded_top_back.xml" value="0.2203125" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/activity_log.xml" value="0.25" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/activity_splash.xml" value="0.22" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/fragment_confirmation.xml" value="0.22" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/fragment_log.xml" value="0.33" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/fragment_main.xml" value="0.33" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/fragment_splash.xml" value="0.19010416666666666" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/friend_small_item.xml" value="0.67" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/message_item.xml" value="0.25" />
+        <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/splash.xml" value="0.67" />
       </map>
     </option>
   </component>

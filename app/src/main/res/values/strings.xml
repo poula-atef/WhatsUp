@@ -5,4 +5,6 @@
     <string name="friends">Friends</string>
     <string name="username">UserName</string>
     <string name="hey_there_this_is_the_last_message_i_have_sent">hey there, this is the last message i have sent</string>
+    <string name="phone_number">Phone Number..</string>
+    <string name="verification_code">Verification Code</string>
 </resources>
