@@ -5,6 +5,11 @@
     <string name="friends">Friends</string>
     <string name="username">UserName</string>
     <string name="hey_there_this_is_the_last_message_i_have_sent">hey there, this is the last message i have sent</string>
-    <string name="phone_number">Phone Number..</string>
+    <string name="phone_number">Phone Number...</string>
     <string name="verification_code">Verification Code</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name">User Name...</string>
+    <string name="birth_date">Birth Date...</string>
+    <string name="Me">Me</string>
 </resources>

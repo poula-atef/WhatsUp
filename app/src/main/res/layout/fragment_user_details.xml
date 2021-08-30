@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue1"
+    tools:context=".UI.UserDetailsFragment">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        app:cardCornerRadius="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/img_picker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="onComponentClick"
+            android:scaleType="centerCrop"
+            />
+    </androidx.cardview.widget.CardView>
+
+    <EditText
+        android:id="@+id/username_details"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/rounded_corner_back"
+        android:hint="@string/user_name"
+        android:paddingStart="@dimen/_13sdp"
+        android:singleLine="true"
+        android:textColor="@color/blue1"
+        android:textColorHint="@color/blue3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+
+    <EditText
+        android:id="@+id/phone_details"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/rounded_corner_back"
+        android:hint="@string/phone_number"
+        android:paddingStart="@dimen/_13sdp"
+        android:singleLine="true"
+        android:enabled="false"
+        android:textColor="@color/blue1"
+        android:textColorHint="@color/blue3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_details" />
+
+
+    <TextView
+        android:id="@+id/birth_date"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:text="@string/birth_date"
+        android:textSize="@dimen/_15sdp"
+        android:textColor="@color/blue3"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:background="@drawable/rounded_corner_back"
+        android:paddingStart="@dimen/_13sdp"
+        android:gravity="center_vertical"
+        android:onClick="onComponentClick"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_details" />
+
+
+    <FrameLayout
+        android:id="@+id/confirm_details"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:background="@drawable/et_rounded_back"
+        android:backgroundTint="@color/white"
+        android:elevation="10dp"
+        android:onClick="onComponentClick"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/birth_date">
+
+        <ImageView
+            android:id="@+id/right_arrow"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_forward_arrow" />
+    <ProgressBar
+        android:id="@+id/pb"
+        android:visibility="gone"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/blue1"
+        />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

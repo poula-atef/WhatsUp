@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/blue1"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".LogFragment">
+    tools:context=".UI.LogFragment">
 
     <ImageView
         android:id="@+id/back_to_splash"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/phone"
+        android:id="@+id/phone_details"
         android:layout_width="0dp"
         android:layout_height="@dimen/_35sdp"
         android:background="@drawable/rounded_corner_back"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:onClick="onComponentClick"
-        app:layout_constraintTop_toBottomOf="@+id/phone">
+        app:layout_constraintTop_toBottomOf="@+id/phone_details">
 
         <ImageView
             android:layout_width="@dimen/_30sdp"

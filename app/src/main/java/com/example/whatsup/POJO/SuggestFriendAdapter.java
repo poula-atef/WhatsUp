@@ -1,4 +1,4 @@
-package com.example.whatsup;
+package com.example.whatsup.POJO;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.whatsup.R;
 
 public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdapter.SuggestFriendViewHolder> {
 

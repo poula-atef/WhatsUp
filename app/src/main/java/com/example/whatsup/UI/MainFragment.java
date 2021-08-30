@@ -1,4 +1,4 @@
-package com.example.whatsup;
+package com.example.whatsup.UI;
 
 import android.os.Bundle;
 
@@ -9,7 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.whatsup.databinding.ActivityMainBinding;
+import com.example.whatsup.POJO.FriendsMessagesAdapter;
+import com.example.whatsup.POJO.SuggestFriendAdapter;
 import com.example.whatsup.databinding.FragmentMainBinding;
 
 

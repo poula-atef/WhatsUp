@@ -1,4 +1,4 @@
-package com.example.whatsup;
+package com.example.whatsup.UI;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.whatsup.R;
 
 
 public class SplashFragment extends Fragment {

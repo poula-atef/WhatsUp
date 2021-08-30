@@ -1,4 +1,4 @@
-package com.example.whatsup;
+package com.example.whatsup.UI;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.whatsup.MainFragment.OnChildChangeListener;
+import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
 import com.example.whatsup.databinding.FragmentConfirmationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,15 +54,10 @@ public class ConfirmationFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            listener.onChildChange(new MainFragment());
-                        } else {
-                            task.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    String TAG = "tag";
-                                    Log.d(TAG, "onFailure: " + e.getMessage());
-                                }
-                            });
+                            listener.onChildChange(new UserDetailsFragment());
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Unexpected Error happened, try again later !!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/blue1"
     android:layout_height="match_parent"
-    tools:context=".MainFragment">
+    tools:context=".UI.MainFragment">
 
     <TextView
         android:id="@+id/textView"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_15sdp"
-        android:text="@string/contacts"
+        android:text="@string/Me"
         android:textColor="@color/white"
         android:textSize="@dimen/_20ssp"
         app:layout_constraintStart_toStartOf="parent"
