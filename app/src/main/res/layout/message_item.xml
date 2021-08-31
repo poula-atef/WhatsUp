@@ -24,19 +24,13 @@
 
             <ImageView
                 android:id="@+id/img"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="#000" />
         </androidx.cardview.widget.CardView>
 
-        <View
-            android:id="@+id/active"
-            android:layout_width="@dimen/_8sdp"
-            android:layout_height="@dimen/_8sdp"
-            android:layout_gravity="bottom|center"
-            android:background="@drawable/et_rounded_back"
-            android:backgroundTint="@color/active_green"
-            android:elevation="2dp" />
+
     </FrameLayout>
 
     <LinearLayout

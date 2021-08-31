@@ -12,4 +12,8 @@
     <string name="user_name">User Name...</string>
     <string name="birth_date">Birth Date...</string>
     <string name="Me">Me</string>
+    <string name="sample_name">Poula Atef</string>
+    <string name="message">Message...</string>
+    <string name="hey_there_this_is_my_message_in_this_app">hey there this is my msg in this app.</string>
+    <string name="seen">seen</string>
 </resources>

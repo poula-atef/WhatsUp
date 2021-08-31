@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/phone_details"
+        android:id="@+id/phone_profile"
         android:layout_width="0dp"
         android:layout_height="@dimen/_35sdp"
         android:background="@drawable/rounded_corner_back"
@@ -60,13 +60,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:onClick="onComponentClick"
-        app:layout_constraintTop_toBottomOf="@+id/phone_details">
+        app:layout_constraintTop_toBottomOf="@+id/phone_profile">
 
         <ImageView
+            android:id="@+id/message_icon"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             android:layout_gravity="center"
             android:src="@drawable/message" />
+
+        <ProgressBar
+            android:id="@+id/pb_log"
+            android:visibility="gone"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue1"
+            />
     </FrameLayout>
 
 

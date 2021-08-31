@@ -1,4 +1,4 @@
-package com.example.whatsup.POJO;
+package com.example.whatsup.POJO.Adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +9,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessagesAdapter.FriendsMessagesViewHolder> {
+
+    private List<Friend> friends;
+
+    public FriendsMessagesAdapter() {
+        friends = new ArrayList<>();
+    }
+
     @NonNull
     @Override
     public FriendsMessagesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -23,6 +34,14 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
 
     }
 
+    public List<Friend> getFriends() {
+        return friends;
+    }
+
+    public void setFriends(List<Friend> friends) {
+        this.friends = friends;
+    }
+
     @Override
     public int getItemCount() {
         return 10;
@@ -31,14 +50,12 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
     public class FriendsMessagesViewHolder extends RecyclerView.ViewHolder {
         ImageView img;
         TextView message,time,name;
-        View active;
         public FriendsMessagesViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
             message = itemView.findViewById(R.id.message);
             time =  itemView.findViewById(R.id.time);
             name =  itemView.findViewById(R.id.name);
-            active =  itemView.findViewById(R.id.active);
         }
     }
 }

@@ -37,23 +37,23 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
+        onChildChange(new ChatFragment());
+
+/*        FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null)
             onChildChange(new SplashFragment());
         else {
             if(checkDataComplete()){
-                Log.d(TAG, "onCreate: userDetails!!");
                 onChildChange(new UserDetailsFragment());
             }
             else{
-                Log.d(TAG, "onCreate: Main!!");
                 onChildChange(new MainFragment());
             }
-        }
+        }*/
     }
 
     private boolean checkDataComplete() {
-        return !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("profile_image",false)
+        return PreferenceManager.getDefaultSharedPreferences(this).getString("profile","?").equals("?")
                 || PreferenceManager.getDefaultSharedPreferences(this).getString("user_name","?").equals("?")
                 || PreferenceManager.getDefaultSharedPreferences(this).getString("birth_date","?").equals("?");
     }
@@ -63,13 +63,14 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         int id = view.getId();
         if (id == R.id.send) {
             String countryCode = ((TextView) findViewById(R.id.country_code)).getText().toString();
-            String phoneNumber = ((TextView) findViewById(R.id.phone_details)).getText().toString();
+            String phoneNumber = ((TextView) findViewById(R.id.phone_profile)).getText().toString();
 
             if (countryCode.isEmpty() || phoneNumber.isEmpty()) {
                 Toast.makeText(MainActivity.this, "All Fields Are Required !!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            ((ProgressBar)findViewById(R.id.pb_log)).setVisibility(View.VISIBLE);
+            ((ImageView)findViewById(R.id.message_icon)).setVisibility(View.GONE);
             WhatsUpUtils.signUpWithPhoneNumber(this,countryCode,phoneNumber,this);
 
         }
@@ -87,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         }
         else if(id == R.id.back_to_log){
             onChildChange(new LogFragment());
+        }
+        else if(id == R.id.back_to_main){
+            onChildChange(new MainFragment());
         }
         else if (id == R.id.img_picker) {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -107,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             String userName = ((EditText)findViewById(R.id.username_details)).getText().toString();
             String birthDate = ((TextView)findViewById(R.id.birth_date)).getText().toString();
             String phoneNumber = ((EditText)findViewById(R.id.phone_details)).getText().toString();
-            if(!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("profile_image",false)
+            if(PreferenceManager.getDefaultSharedPreferences(this).getString("profile","?").equals("?")
                 || userName.isEmpty() || birthDate.equals(getString(R.string.birth_date))){
                 Toast.makeText(this, "All Fields are Required !!", Toast.LENGTH_SHORT).show();
                 return;
@@ -117,8 +121,10 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("birth_date",birthDate).apply();
 
             WhatsUpUtils.setUserDataToFirebaseDatabase(userName,birthDate,phoneNumber,FirebaseAuth.getInstance().getCurrentUser().getUid(),this);
-            Log.d(TAG, "onComponentClick: from onComponentClick !!!");
             onChildChange(new MainFragment());
+        }
+        else if(id == R.id.profile){
+            onChildChange(new ProfileFragment());
         }
     }
 
@@ -141,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1 && resultCode == RESULT_OK && data != null){
             ((ImageView)findViewById(R.id.img_picker)).setImageURI(data.getData());
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("profile_image",true).apply();
             WhatsUpUtils.saveImageInFirebaseStorage(data.getData(),this,this);
         }
     }

@@ -6,15 +6,17 @@ public class User {
     private String userName;
     private String birthDate;
     private String phoneNumber;
+    private boolean active;
     private List<Friend> friends;
     private String ImageUrl;
     public User() {
     }
 
-    public User(String userName, String birthDate, String phoneNumber, List<Friend> friends, String imageUrl) {
+    public User(String userName, String birthDate, String phoneNumber, boolean active, List<Friend> friends, String imageUrl) {
         this.userName = userName;
         this.birthDate = birthDate;
         this.phoneNumber = phoneNumber;
+        this.active = active;
         this.friends = friends;
         ImageUrl = imageUrl;
     }
@@ -57,5 +59,13 @@ public class User {
 
     public void setImageUrl(String imageUrl) {
         ImageUrl = imageUrl;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

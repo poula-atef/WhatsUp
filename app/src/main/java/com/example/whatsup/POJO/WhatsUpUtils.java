@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class WhatsUpUtils {
@@ -89,10 +90,12 @@ public class WhatsUpUtils {
 
     public static void setUserDataToFirebaseDatabase(String userName, String birthDate, String phoneNumber, String uid,Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users").child(uid);
+        DatabaseReference reference = database.getReference("users");
         String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile","");
-        User user = new User(userName,birthDate,phoneNumber,null,imageUrl);
-        reference.push().setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        User user = new User(userName,birthDate,phoneNumber,true,null,imageUrl);
+        HashMap<String,User> hm = new HashMap<String,User>();
+        hm.put(uid,user);
+        reference.setValue(hm).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful()){

@@ -8,12 +8,13 @@
     tools:context=".UI.MainFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:text="@string/Me"
+        android:onClick="onComponentClick"
         android:textColor="@color/white"
         android:textSize="@dimen/_20ssp"
         app:layout_constraintStart_toStartOf="parent"

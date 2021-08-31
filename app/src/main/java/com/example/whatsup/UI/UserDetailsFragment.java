@@ -28,10 +28,8 @@ public class UserDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserDetailsBinding.inflate(inflater);
-        String TAG = "tag";
-        Log.d(TAG, "onCreateView: from user details!!!");
         String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-        String imageUrl = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("profile_image","?");
+        String imageUrl = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("profile","?");
 
         binding.phoneDetails.setText(phone);
         if(!imageUrl.equals("?"))
@@ -39,4 +37,12 @@ public class UserDetailsFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        binding = null;
+    }
+
+
 }
