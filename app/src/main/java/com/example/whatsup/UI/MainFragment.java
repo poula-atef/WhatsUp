@@ -1,5 +1,6 @@
 package com.example.whatsup.UI;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.whatsup.POJO.Adapters.FriendsMessagesAdapter;
+import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter.onItemClickListener;
 import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter;
 import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.User;
@@ -31,12 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements onItemClickListener {
 
     private FragmentMainBinding binding;
     private FriendsMessagesAdapter messageAdapter;
     private SuggestFriendAdapter friendAdapter;
     private List<User> users;
+    private OnChildChangeListener listener;
     String TAG = "tag";
 
     public MainFragment() {
@@ -49,8 +52,7 @@ public class MainFragment extends Fragment {
         binding = FragmentMainBinding.inflate(inflater);
 
         binding.recFriends.setHasFixedSize(true);
-        binding.recFriends.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-
+        binding.recFriends.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 
         messageAdapter = new FriendsMessagesAdapter();
@@ -93,6 +95,8 @@ public class MainFragment extends Fragment {
 
     private void fillFiendsAdapter(CharSequence charSequence) {
         List<User> res = new ArrayList<>();
+        if (users == null)
+            return;
         if (!charSequence.toString().isEmpty()) {
             for (User user : users) {
                 if (user.getUserName().contains(charSequence.toString())) {
@@ -104,6 +108,7 @@ public class MainFragment extends Fragment {
         }
 
         friendAdapter.setUsers(res);
+        friendAdapter.setListener(this);
         binding.recFriends.setAdapter(friendAdapter);
     }
 
@@ -115,7 +120,8 @@ public class MainFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     User user = shot.getValue(User.class);
-                    users.add(user);
+                    if (users != null && !user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
+                        users.add(user);
                 }
                 fillFiendsAdapter(charSequence);
             }
@@ -135,6 +141,8 @@ public class MainFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (messageAdapter == null)
+                    return;
                 messageAdapter.getFriends().add(snapshot.getValue(Friend.class));
                 binding.recMessages.getAdapter().notifyDataSetChanged();
             }
@@ -144,6 +152,17 @@ public class MainFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        listener = (OnChildChangeListener) context;
+    }
+
+    @Override
+    public void onitemClick(User user) {
+        listener.onChildChange(new ChatFragment(user));
     }
 
     public interface OnChildChangeListener {

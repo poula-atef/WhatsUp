@@ -21,6 +21,7 @@ public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdap
 
     private List<User> users;
     private Context context;
+    private onItemClickListener listener;
     String TAG = "tag";
 
     @NonNull
@@ -54,13 +55,29 @@ public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdap
 
     }
 
-    public class SuggestFriendViewHolder extends RecyclerView.ViewHolder {
+    public onItemClickListener getListener() {
+        return listener;
+    }
+
+    public void setListener(onItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface onItemClickListener{
+        void onitemClick(User user);
+    }
+    public class SuggestFriendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView icon;
         TextView name;
         public SuggestFriendViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.img);
             name = itemView.findViewById(R.id.name);
+            itemView.setOnClickListener(this);
+        }
+        @Override
+        public void onClick(View view) {
+            listener.onitemClick(users.get(getAdapterPosition()));
         }
     }
 }

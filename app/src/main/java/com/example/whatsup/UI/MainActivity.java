@@ -36,10 +36,8 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        onChildChange(new ChatFragment());
-
-/*        FirebaseAuth auth = FirebaseAuth.getInstance();
+        
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null)
             onChildChange(new SplashFragment());
         else {
@@ -47,9 +45,10 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
                 onChildChange(new UserDetailsFragment());
             }
             else{
+                WhatsUpUtils.makeMeOnline();
                 onChildChange(new MainFragment());
             }
-        }*/
+        }
     }
 
     private boolean checkDataComplete() {
@@ -149,6 +148,12 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             ((ImageView)findViewById(R.id.img_picker)).setImageURI(data.getData());
             WhatsUpUtils.saveImageInFirebaseStorage(data.getData(),this,this);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        WhatsUpUtils.makeMeOffline();
     }
 }
 

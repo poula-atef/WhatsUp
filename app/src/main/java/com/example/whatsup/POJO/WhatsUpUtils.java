@@ -35,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -90,12 +91,10 @@ public class WhatsUpUtils {
 
     public static void setUserDataToFirebaseDatabase(String userName, String birthDate, String phoneNumber, String uid,Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users");
+        DatabaseReference reference = database.getReference("users").child(uid);
         String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile","");
-        User user = new User(userName,birthDate,phoneNumber,true,null,imageUrl);
-        HashMap<String,User> hm = new HashMap<String,User>();
-        hm.put(uid,user);
-        reference.setValue(hm).addOnCompleteListener(new OnCompleteListener<Void>() {
+        User user = new User(userName,birthDate,phoneNumber,true,null,imageUrl,uid,"online");
+        reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(!task.isSuccessful()){
@@ -133,4 +132,39 @@ public class WhatsUpUtils {
             }
         });
     }
+    
+    public static String getCurrentTimeFormat(){
+        Date date = Calendar.getInstance().getTime();
+        String type = "am";
+        int hour = date.getHours();
+        if(hour > 12){
+            hour -= 12;
+            type = "pm";
+        }
+        else if(hour == 0){
+            hour = 12;
+        }
+        int minute = date.getMinutes();
+
+        return hour + ":" + minute + " " + type;
+    }
+
+    public static void makeMeOnline(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        reference.child("active").setValue(true);
+        reference.child("lastSeen").setValue("online");
+
+    }
+
+    public static void makeMeOffline(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        reference.child("active").setValue(false);
+        reference.child("lastSeen").setValue(getCurrentTimeFormat());
+
+    }
+
 }

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.whatsup.POJO.Classes.Message;
+import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.R;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -49,6 +50,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         return messages.size();
     }
 
+
     public List<Message> getMessages() {
         return messages;
     }
@@ -64,6 +66,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         return 1;
     }
 
+
+
     public class MessageViewholder extends RecyclerView.ViewHolder {
         TextView message,messageTime,messageSeen;
         public MessageViewholder(@NonNull View itemView) {
@@ -72,5 +76,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             messageTime = itemView.findViewById(R.id.message_time);
             messageSeen = itemView.findViewById(R.id.message_seen);
         }
+
+
     }
 }
