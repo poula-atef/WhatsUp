@@ -31,9 +31,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewholder holder, int position) {
-        holder.message.setText(messages.get(position).getMessage());
-        holder.messageTime.setText(messages.get(position).getTime());
-        holder.messageTime.setText(messages.get(position).getTime());
+        if(!holder.message.getText().equals(messages.get(position).getMessage()))
+            holder.message.setText(messages.get(position).getMessage());
+        if(!holder.messageTime.getText().equals(messages.get(position).getTime()))
+            holder.messageTime.setText(messages.get(position).getTime());
         if(messages.get(position).getSenderId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             if (messages.get(position).getSeen() == 1)
                 holder.messageSeen.setText("Reached");

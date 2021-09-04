@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,7 @@ public class ChatFragment extends Fragment {
     private boolean first;
     private MessagesAdapter messagesAdapter;
     private OnChildChangeListener listener;
+    String TAG = "tag";
 
     public ChatFragment() {
 
@@ -53,9 +55,14 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater);
 
+        binding.recChat.setAdapter(new MessagesAdapter());
+        binding.recChat.setLayoutManager(new LinearLayoutManager(getContext()));
+
         prepareUserData();
 
         updateUserData();
+
+        markAllMessagesAsSeen();
 
         getAllChatMessages();
 
@@ -70,14 +77,73 @@ public class ChatFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void markAllMessagesAsSeen() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("messages")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(user.getUserId());
+        final DatabaseReference ref1 = reference;
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null || binding.recChat.getAdapter() == null || !user.isActive())
+                    return;
+                List<Message> messages = new ArrayList<>();
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    Message message = shot.getValue(Message.class);
+                    if (message.getReceiverId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        message.setSeen(2);
+                        ref1.child(shot.getKey()).setValue(message);
+                    }
+                    messages.add(message);
+                }
+                ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
+                ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
+                ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        reference = database.getReference().child("messages")
+                .child(user.getUserId())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        final DatabaseReference ref2 = reference;
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null || binding.recChat.getAdapter() == null || !user.isActive())
+                    return;
+                List<Message> messages = new ArrayList<>();
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    Message message = shot.getValue(Message.class);
+                    if (message.getReceiverId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        message.setSeen(2);
+                        messages.add(message);
+                        ref2.child(shot.getKey()).setValue(message);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
     private void prepareUserData() {
         binding.username.setText(user.getUserName());
         Glide.with(this).load(user.getImageUrl()).into(binding.img);
         binding.lastSeen.setText(user.getLastSeen());
-        if(user.isActive()){
+        if (user.isActive()) {
             binding.active.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             binding.active.setVisibility(View.INVISIBLE);
         }
     }
@@ -88,16 +154,17 @@ public class ChatFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user1 = snapshot.getValue(User.class);
-                if(user == null || user1 == null)
+                if (binding == null || binding.recChat.getAdapter() == null)
                     return;
-                if(user.isActive() != user1.isActive()){
-                    if(user1.isActive() && user1.getLastSeen().equals("online")){
+                User user1 = snapshot.getValue(User.class);
+                if (user == null || user1 == null)
+                    return;
+                if (user.isActive() != user1.isActive()) {
+                    if (user1.isActive() && user1.getLastSeen().equals("online")) {
                         binding.active.setVisibility(View.VISIBLE);
                         binding.lastSeen.setText(user1.getLastSeen());
                         user = user1;
-                    }
-                    else if(!user1.isActive() && !user1.getLastSeen().equals("online")){
+                    } else if (!user1.isActive() && !user1.getLastSeen().equals("online")) {
                         binding.active.setVisibility(View.INVISIBLE);
                         binding.lastSeen.setText(user1.getLastSeen());
                         user = user1;
@@ -113,7 +180,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void sendMessage() {
-        if(binding.etMessage.getText().toString().isEmpty())
+        if (binding.etMessage.getText().toString().isEmpty())
             return;
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -152,6 +219,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void getAllChatMessages() {
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("messages")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -160,6 +228,8 @@ public class ChatFragment extends Fragment {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null || binding.recChat.getAdapter() == null)
+                    return;
                 List<Message> messages = new ArrayList<>();
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     Message message = shot.getValue(Message.class);
@@ -168,13 +238,14 @@ public class ChatFragment extends Fragment {
                 if (first) {
                     messagesAdapter = new MessagesAdapter();
                     messagesAdapter.setMessages(messages);
-                    binding.recChat.setAdapter(messagesAdapter);
+                    ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
+                    ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
                     LinearLayoutManager llm = new LinearLayoutManager(getContext());
                     llm.scrollToPosition(messages.size() - 1);
                     binding.recChat.setLayoutManager(llm);
                     first = false;
                 } else {
-                    ((MessagesAdapter) binding.recChat.getAdapter()).getMessages().add(messages.get(messages.size() - 1));
+                    ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
                     ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
                     ((MessagesAdapter) binding.recChat.getAdapter()).notifyItemInserted(messages.size() - 1);
                 }
@@ -188,8 +259,8 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
         user = null;
         binding = null;
     }
