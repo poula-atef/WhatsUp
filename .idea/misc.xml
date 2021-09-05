@@ -31,8 +31,12 @@
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/message_item.xml" value="0.25" />
         <entry key="..\:/Users/PoulaAtef/AndroidStudioProjects/Whatsup/app/src/main/res/layout/splash.xml" value="0.67" />
         <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/fragment_chat.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/green_message.xml" value="0.13405797101449277" />
+        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/fragment_image.xml" value="0.17798913043478262" />
+        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/fragment_log.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/fragment_splash.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/green_message.xml" value="0.16" />
         <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/grey_message.xml" value="0.13405797101449277" />
+        <entry key="..\:/Users/PoulaAtef/StudioProjects/WhatsUp/app/src/main/res/layout/image_layout.xml" value="0.17798913043478262" />
       </map>
     </option>
   </component>

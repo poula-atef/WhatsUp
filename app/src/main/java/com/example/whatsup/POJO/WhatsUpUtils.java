@@ -16,10 +16,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.R;
 import com.example.whatsup.UI.ConfirmationFragment;
-import com.example.whatsup.UI.MainFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -36,7 +36,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class WhatsUpUtils {
@@ -74,7 +73,7 @@ public class WhatsUpUtils {
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(verificationId, forceResendingToken);
 
-                listener.onChildChange(new ConfirmationFragment(verificationId));
+                listener.onChildChangeWithoutStack(new ConfirmationFragment(verificationId));
             }
         };
 
@@ -166,5 +165,71 @@ public class WhatsUpUtils {
         reference.child("lastSeen").setValue(getCurrentTimeFormat());
 
     }
+
+
+    public static void sendImageMessage(Uri imageUri, Context context, User user){
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference reference = storage.getReference("messages_images")
+                .child(Calendar.getInstance().getTime().getTime() + "_" + FirebaseAuth.getInstance().getCurrentUser().getUid()+ "_img");
+        reference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()){
+                    reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()){
+                                Message message =  new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(),user.getUserId()
+                                        ,"",true,getCurrentTimeFormat(),task.getResult().toString(),1);
+                                sendMessage(message,context,user);
+                            }
+                        }
+                    });
+                }
+                else{
+                    Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    public static void sendMessage(Message message, Context context, User user) {
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("messages");
+
+
+        reference
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child(user.getUserId())
+                .push()
+                .setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        reference
+                .child(user.getUserId())
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .push()
+                .setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
 
 }

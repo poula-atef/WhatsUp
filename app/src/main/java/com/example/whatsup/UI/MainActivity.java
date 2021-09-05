@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -20,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.WhatsUpUtils;
 import com.example.whatsup.R;
 import com.example.whatsup.databinding.ActivityMainBinding;
@@ -29,6 +29,7 @@ import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
 public class MainActivity extends AppCompatActivity implements OnChildChangeListener {
 
     private ActivityMainBinding binding;
+    private User user;
     String TAG = "tag";
 
     @Override
@@ -39,14 +40,14 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null)
-            onChildChange(new SplashFragment());
+            onChildChangeWithoutStack(new SplashFragment());
         else {
             if(checkDataComplete()){
-                onChildChange(new UserDetailsFragment());
+                onChildChangeWithoutStack(new UserDetailsFragment());
             }
             else{
                 WhatsUpUtils.makeMeOnline();
-                onChildChange(new MainFragment());
+                onChildChangeWithoutStack(new MainFragment());
             }
         }
     }
@@ -74,22 +75,22 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
 
         }
         else if (id == R.id.login_btn) {
-            onChildChange(new LogFragment());
+            onChildChangeWithStack(new LogFragment());
         }
         else if (id == R.id.exit) {
             FirebaseAuth auth = FirebaseAuth.getInstance();
             auth.signOut();
             PreferenceManager.getDefaultSharedPreferences(this).edit().clear().apply();
-            onChildChange(new SplashFragment());
+            onChildChangeWithoutStack(new SplashFragment());
         }
         else if (id == R.id.back_to_splash) {
-            onChildChange(new SplashFragment());
+            onChildChangeWithoutStack(new SplashFragment());
         }
         else if(id == R.id.back_to_log){
-            onChildChange(new LogFragment());
+            onChildChangeWithoutStack(new LogFragment());
         }
         else if(id == R.id.back_to_main){
-            onChildChange(new MainFragment());
+            onChildChangeWithoutStack(new MainFragment());
         }
         else if (id == R.id.img_picker) {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -120,15 +121,20 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             PreferenceManager.getDefaultSharedPreferences(this).edit().putString("birth_date",birthDate).apply();
 
             WhatsUpUtils.setUserDataToFirebaseDatabase(userName,birthDate,phoneNumber,FirebaseAuth.getInstance().getCurrentUser().getUid(),this);
-            onChildChange(new MainFragment());
+            onChildChangeWithoutStack(new MainFragment());
         }
         else if(id == R.id.profile){
-            onChildChange(new ProfileFragment());
+            onChildChangeWithoutStack(new ProfileFragment());
         }
     }
 
     @Override
-    public void onChildChange(Fragment fragment) {
+    public void onChildChangeWithoutStack(Fragment fragment) {
+
+        while(getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            getSupportFragmentManager().popBackStack();
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -142,11 +148,31 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
     }
 
     @Override
+    public void onChildChangeWithStack(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(
+                        R.anim.enter_right_to_left
+                        , R.anim.exit_right_to_left
+                        , R.anim.enter_left_to_right
+                        , R.anim.exit_left_to_right)
+                .replace(R.id.container, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1 && resultCode == RESULT_OK && data != null){
-            ((ImageView)findViewById(R.id.img_picker)).setImageURI(data.getData());
-            WhatsUpUtils.saveImageInFirebaseStorage(data.getData(),this,this);
+        if(resultCode == RESULT_OK && data != null){
+            if(requestCode == 1) {
+                ((ImageView) findViewById(R.id.img_picker)).setImageURI(data.getData());
+                WhatsUpUtils.saveImageInFirebaseStorage(data.getData(), this, this);
+            }
+            else if(requestCode == 2){
+                WhatsUpUtils.sendImageMessage(data.getData(),this,user);
+                user = null;
+            }
         }
     }
 
@@ -154,6 +180,13 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
     protected void onPause() {
         super.onPause();
         WhatsUpUtils.makeMeOffline();
+    }
+
+    @Override
+    public void sendImageMessage(User user) {
+        this.user = user;
+        Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(intent,2);
     }
 }
 

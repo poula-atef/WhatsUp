@@ -73,7 +73,7 @@
             android:background="#eee"
             >
             <ImageView
-                android:id="@+id/add_img"
+                android:id="@+id/add_img_chat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1.3"
