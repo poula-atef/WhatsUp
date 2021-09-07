@@ -1,6 +1,7 @@
 package com.example.whatsup.POJO.Adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,12 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
             holder.message.setText(friends.get(position).getLastMessage());
             holder.message.setVisibility(View.VISIBLE);
             holder.imgMessage.setVisibility(View.GONE);
+            if(friends.get(position).getSeen() == 1){
+                holder.message.setTypeface(holder.message.getTypeface(), Typeface.BOLD);
+            }
+            else{
+                holder.message.setTypeface(holder.message.getTypeface(), Typeface.NORMAL);
+            }
         } else {
             holder.message.setVisibility(View.GONE);
             holder.imgMessage.setVisibility(View.VISIBLE);

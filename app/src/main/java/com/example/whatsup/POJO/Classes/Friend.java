@@ -1,8 +1,10 @@
 package com.example.whatsup.POJO.Classes;
 
 public class Friend {
+    private String senderId;
     private String userName;
     private String profileImageUrl;
+    private int seen;
     private String lastMessage;
     private String lastDate;
 
@@ -43,5 +45,21 @@ public class Friend {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public int getSeen() {
+        return seen;
+    }
+
+    public void setSeen(int seen) {
+        this.seen = seen;
+    }
+
+    public String getSenderId() {
+        return senderId;
+    }
+
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 }

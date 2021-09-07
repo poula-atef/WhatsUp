@@ -29,14 +29,18 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class WhatsUpUtils {
@@ -230,9 +234,10 @@ public class WhatsUpUtils {
     }
 
 
-    public static void setUserFriendLastMessage(Message lastMessage, String userId, User user, Context context) {
+    public static void setUserFriendLastMessage(Message lastMessage, String userId, User user, Context context, String senderId) {
 
         Friend friend = new Friend();
+        friend.setSenderId(userId);
         friend.setLastDate(lastMessage.getTime());
         friend.setUserName(user.getUserName());
         friend.setProfileImageUrl(user.getImageUrl());
@@ -249,8 +254,35 @@ public class WhatsUpUtils {
                 .getReference("users")
                 .child(userId)
                 .child("friends")
-                .child(user.getUserId())
-                .setValue(friend);
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            if (shot.getKey().equals(user.getUserId())) {
+                                Friend frnd = shot.getValue(Friend.class);
+                                if (frnd.getSenderId().equals(senderId)
+                                        || (frnd.getSeen() == 2
+                                        && frnd.getLastMessage().equals(friend.getLastMessage()))) {
+                                    friend.setSeen(2);
+                                } else {
+                                    friend.setSeen(1);
+                                }
+                                FirebaseDatabase.getInstance()
+                                        .getReference("users")
+                                        .child(userId)
+                                        .child("friends")
+                                        .child(user.getUserId())
+                                        .setValue(friend);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
     }
 

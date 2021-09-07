@@ -133,6 +133,17 @@ public class ChatFragment extends Fragment {
                 ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
                 ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
                 ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
+
+                if(!messages.isEmpty()) {
+                    FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("friends")
+                            .child(user.getUserId())
+                            .child("seen")
+                            .setValue(2);
+                }
+
             }
 
             @Override
@@ -240,10 +251,10 @@ public class ChatFragment extends Fragment {
                 } else {
 
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
-                            , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext());
+                            , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext(), messages.get(messages.size() - 1).getSenderId());
 
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
-                            , user.getUserId(), currentUser, getContext());
+                            , user.getUserId(), currentUser, getContext(), messages.get(messages.size() - 1).getSenderId());
 
                 }
             }
