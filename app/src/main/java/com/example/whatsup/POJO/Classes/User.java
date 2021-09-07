@@ -1,5 +1,6 @@
 package com.example.whatsup.POJO.Classes;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class User {
@@ -9,13 +10,13 @@ public class User {
     private String userId;
     private String lastSeen;
     private boolean active;
-    private List<Friend> friends;
+    private HashMap<String,?> friends;
     private String ImageUrl;
 
     public User() {
     }
 
-    public User(String userName, String birthDate, String phoneNumber, boolean active, List<Friend> friends, String imageUrl, String userId, String lastSeen) {
+    public User(String userName, String birthDate, String phoneNumber, boolean active, HashMap<String,?> friends, String imageUrl, String userId, String lastSeen) {
         this.userName = userName;
         this.birthDate = birthDate;
         this.lastSeen = lastSeen;
@@ -50,11 +51,11 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public List<Friend> getFriends() {
+    public HashMap<String,?> getFriends() {
         return friends;
     }
 
-    public void setFriends(List<Friend> friends) {
+    public void setFriends(HashMap<String,?> friends) {
         this.friends = friends;
     }
 

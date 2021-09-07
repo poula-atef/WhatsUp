@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             onChildChangeWithoutStack(new LogFragment());
         }
         else if(id == R.id.back_to_main){
-            onChildChangeWithoutStack(new MainFragment());
+            getSupportFragmentManager().popBackStack();
         }
         else if (id == R.id.img_picker) {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             onChildChangeWithoutStack(new MainFragment());
         }
         else if(id == R.id.profile){
-            onChildChangeWithoutStack(new ProfileFragment());
+            onChildChangeWithStack(new ProfileFragment());
         }
     }
 

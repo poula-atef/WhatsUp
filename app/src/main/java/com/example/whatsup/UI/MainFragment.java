@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.whatsup.POJO.Adapters.FriendsMessagesAdapter;
+import com.example.whatsup.POJO.Adapters.MessagesAdapter;
 import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter.onItemClickListener;
 import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter;
 import com.example.whatsup.POJO.Classes.Friend;
+import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.databinding.FragmentMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +28,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -48,23 +53,57 @@ public class MainFragment extends Fragment implements onItemClickListener {
 
         binding = FragmentMainBinding.inflate(inflater);
 
+        friendAdapter = new SuggestFriendAdapter();
         binding.recFriends.setHasFixedSize(true);
         binding.recFriends.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
 
         messageAdapter = new FriendsMessagesAdapter();
-        friendAdapter = new SuggestFriendAdapter();
         binding.recMessages.setAdapter(messageAdapter);
         binding.recMessages.setHasFixedSize(true);
         binding.recMessages.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        searchingForFriend();
-
         getSearchResults();
+
+        getAllMessages();
 
         return binding.getRoot();
     }
+
+    private void getAllMessages() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("friends");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null || binding.recMessages.getAdapter() == null)
+                    return;
+                List<Friend> friends = new ArrayList<>();
+                List<String> ids = new ArrayList<>();
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    Friend friend = shot.getValue(Friend.class);
+                    friends.add(friend);
+                    ids.add(shot.getKey());
+                }
+
+                ((FriendsMessagesAdapter) binding.recMessages.getAdapter()).setListener(listener);
+                ((FriendsMessagesAdapter) binding.recMessages.getAdapter()).setFriendsIds(ids);
+                ((FriendsMessagesAdapter) binding.recMessages.getAdapter()).setFriends(friends);
+                ((FriendsMessagesAdapter) binding.recMessages.getAdapter()).notifyDataSetChanged();
+                binding.recMessages.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
     private void getSearchResults() {
         binding.search.addTextChangedListener(new TextWatcher() {
@@ -100,8 +139,6 @@ public class MainFragment extends Fragment implements onItemClickListener {
                     res.add(user);
                 }
             }
-        } else {
-            res = users;
         }
 
         friendAdapter.setUsers(res);
@@ -115,6 +152,8 @@ public class MainFragment extends Fragment implements onItemClickListener {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                users.clear();
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     User user = shot.getValue(User.class);
                     if (users != null && !user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))
@@ -131,26 +170,6 @@ public class MainFragment extends Fragment implements onItemClickListener {
 
     }
 
-    public void searchingForFriend() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (messageAdapter == null)
-                    return;
-                messageAdapter.getFriends().add(snapshot.getValue(Friend.class));
-                binding.recMessages.getAdapter().notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -159,12 +178,14 @@ public class MainFragment extends Fragment implements onItemClickListener {
 
     @Override
     public void onitemClick(User user) {
-        listener.onChildChangeWithoutStack(new ChatFragment(user));
+        listener.onChildChangeWithStack(new ChatFragment(user));
     }
 
     public interface OnChildChangeListener {
         void onChildChangeWithoutStack(Fragment fragment);
+
         void onChildChangeWithStack(Fragment fragment);
+
         void sendImageMessage(User user);
     }
 

@@ -16,4 +16,6 @@
     <string name="message">Message...</string>
     <string name="hey_there_this_is_my_message_in_this_app">hey there this is my msg in this app.</string>
     <string name="seen">seen</string>
+    <string name="photo">Photo</string>
+    <string name="WHATSUP_IMG_CONSTANT">WHATSUP_IMG_CONSTANT</string>
 </resources>

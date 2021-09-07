@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Adapters.MessagesAdapter;
+import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.WhatsUpUtils;
+import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentChatBinding;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +35,7 @@ import java.util.List;
 public class ChatFragment extends Fragment {
 
     private FragmentChatBinding binding;
-    private User user;
+    private User user, currentUser;
     private boolean first;
     private OnChildChangeListener listener;
     String TAG = "tag";
@@ -53,9 +55,12 @@ public class ChatFragment extends Fragment {
         adapter.setListener(listener);
         binding.recChat.setAdapter(adapter);
         binding.recChat.setLayoutManager(new LinearLayoutManager(getContext()));
+
         prepareUserData();
 
         updateUserData();
+
+        getCurrentUserData();
 
         markAllMessagesAsSeen();
 
@@ -83,6 +88,28 @@ public class ChatFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void getCurrentUserData() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("users");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    User user = shot.getValue(User.class);
+                    if (user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                        currentUser = user;
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void markAllMessagesAsSeen() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("messages")
@@ -103,7 +130,6 @@ public class ChatFragment extends Fragment {
                     }
                     messages.add(message);
                 }
-
                 ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
                 ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
                 ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
@@ -212,9 +238,13 @@ public class ChatFragment extends Fragment {
                     binding.recChat.setLayoutManager(llm);
                     first = false;
                 } else {
-                    ((MessagesAdapter) binding.recChat.getAdapter()).putOneElement(messages.get(messages.size() - 1), messages.size() - 1);
-                    ((MessagesAdapter) binding.recChat.getAdapter()).notifyItemInserted(messages.size() - 1);
-                    ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
+
+                    WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
+                            , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext());
+
+                    WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
+                            , user.getUserId(), currentUser, getContext());
+
                 }
             }
 
@@ -238,7 +268,6 @@ public class ChatFragment extends Fragment {
         super.onAttach(context);
         listener = (OnChildChangeListener) context;
     }
-
 
 
 }

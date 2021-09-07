@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.R;
@@ -88,59 +89,57 @@ public class WhatsUpUtils {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    public static void setUserDataToFirebaseDatabase(String userName, String birthDate, String phoneNumber, String uid,Context context) {
+    public static void setUserDataToFirebaseDatabase(String userName, String birthDate, String phoneNumber, String uid, Context context) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference("users").child(uid);
-        String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile","");
-        User user = new User(userName,birthDate,phoneNumber,true,null,imageUrl,uid,"online");
+        String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile", "");
+        User user = new User(userName, birthDate, phoneNumber, true, null, imageUrl, uid, "online");
         reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                if(!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    public static void saveImageInFirebaseStorage(Uri imageUri,Context context,Activity activity) {
+    public static void saveImageInFirebaseStorage(Uri imageUri, Context context, Activity activity) {
 
-        ((ImageView)activity.findViewById(R.id.right_arrow)).setVisibility(View.GONE);
-        ((ProgressBar)activity.findViewById(R.id.pb)).setVisibility(View.VISIBLE);
+        ((ImageView) activity.findViewById(R.id.right_arrow)).setVisibility(View.GONE);
+        ((ProgressBar) activity.findViewById(R.id.pb)).setVisibility(View.VISIBLE);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference reference = storage.getReference("profile_images").child(FirebaseAuth.getInstance().getCurrentUser().getUid()+ "_profile");
+        StorageReference reference = storage.getReference("profile_images").child(FirebaseAuth.getInstance().getCurrentUser().getUid() + "_profile");
         reference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            if(task.isSuccessful()){
-                                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("profile",task.getResult().toString()).apply();
-                                ((ImageView)activity.findViewById(R.id.right_arrow)).setVisibility(View.VISIBLE);
-                                ((ProgressBar)activity.findViewById(R.id.pb)).setVisibility(View.GONE);
+                            if (task.isSuccessful()) {
+                                PreferenceManager.getDefaultSharedPreferences(context).edit().putString("profile", task.getResult().toString()).apply();
+                                ((ImageView) activity.findViewById(R.id.right_arrow)).setVisibility(View.VISIBLE);
+                                ((ProgressBar) activity.findViewById(R.id.pb)).setVisibility(View.GONE);
                             }
                         }
                     });
-                }
-                else{
+                } else {
                     Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-    
-    public static String getCurrentTimeFormat(){
+
+    public static String getCurrentTimeFormat() {
         Date date = Calendar.getInstance().getTime();
         String type = "am";
         int hour = date.getHours();
-        if(hour > 12){
+        if (hour > 12) {
             hour -= 12;
             type = "pm";
-        }
-        else if(hour == 0){
+        } else if (hour == 0) {
             hour = 12;
         }
         int minute = date.getMinutes();
@@ -148,7 +147,7 @@ public class WhatsUpUtils {
         return hour + ":" + minute + " " + type;
     }
 
-    public static void makeMeOnline(){
+    public static void makeMeOnline() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -157,7 +156,7 @@ public class WhatsUpUtils {
 
     }
 
-    public static void makeMeOffline(){
+    public static void makeMeOffline() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -167,27 +166,26 @@ public class WhatsUpUtils {
     }
 
 
-    public static void sendImageMessage(Uri imageUri, Context context, User user){
+    public static void sendImageMessage(Uri imageUri, Context context, User user) {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference reference = storage.getReference("messages_images")
-                .child(Calendar.getInstance().getTime().getTime() + "_" + FirebaseAuth.getInstance().getCurrentUser().getUid()+ "_img");
+                .child(Calendar.getInstance().getTime().getTime() + "_" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "_img");
         reference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            if(task.isSuccessful()){
-                                Message message =  new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(),user.getUserId()
-                                        ,"",true,getCurrentTimeFormat(),task.getResult().toString(),1);
-                                sendMessage(message,context,user);
+                            if (task.isSuccessful()) {
+                                Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUserId()
+                                        , "", true, getCurrentTimeFormat(), task.getResult().toString(), 1);
+                                sendMessage(message, context, user);
                             }
                         }
                     });
-                }
-                else{
+                } else {
                     Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -228,6 +226,31 @@ public class WhatsUpUtils {
                 }
             }
         });
+
+    }
+
+
+    public static void setUserFriendLastMessage(Message lastMessage, String userId, User user, Context context) {
+
+        Friend friend = new Friend();
+        friend.setLastDate(lastMessage.getTime());
+        friend.setUserName(user.getUserName());
+        friend.setProfileImageUrl(user.getImageUrl());
+        if (lastMessage.isImg())
+            friend.setLastMessage(context.getString(R.string.WHATSUP_IMG_CONSTANT));
+        else {
+            if (lastMessage.getSenderId().equals(userId)) {
+                friend.setLastMessage("You: " + lastMessage.getMessage());
+            } else {
+                friend.setLastMessage(lastMessage.getMessage());
+            }
+        }
+        FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("friends")
+                .child(user.getUserId())
+                .setValue(friend);
 
     }
 
