@@ -12,11 +12,12 @@ public class User {
     private boolean active;
     private HashMap<String,?> friends;
     private String ImageUrl;
+    private String token;
 
     public User() {
     }
 
-    public User(String userName, String birthDate, String phoneNumber, boolean active, HashMap<String,?> friends, String imageUrl, String userId, String lastSeen) {
+    public User(String userName, String birthDate, String phoneNumber, boolean active, HashMap<String,?> friends, String imageUrl, String userId, String lastSeen, String token) {
         this.userName = userName;
         this.birthDate = birthDate;
         this.lastSeen = lastSeen;
@@ -24,7 +25,8 @@ public class User {
         this.userId = userId;
         this.active = active;
         this.friends = friends;
-        ImageUrl = imageUrl;
+        this.ImageUrl = imageUrl;
+        this.token = token;
     }
 
     public String getUserName() {
@@ -89,5 +91,13 @@ public class User {
 
     public void setLastSeen(String lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

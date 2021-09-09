@@ -20,11 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.whatsup.POJO.Classes.User;
+import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.POJO.WhatsUpUtils;
 import com.example.whatsup.R;
 import com.example.whatsup.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements OnChildChangeListener {
 
@@ -37,7 +39,11 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        
+
+        FirebaseMessaging.getInstance().subscribeToTopic(Constants.TOPIC);
+
+//        onChildChangeWithoutStack(new FcmTestFragment());
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() == null)
             onChildChangeWithoutStack(new SplashFragment());
@@ -50,6 +56,8 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
                 onChildChangeWithoutStack(new MainFragment());
             }
         }
+
+
     }
 
     private boolean checkDataComplete() {

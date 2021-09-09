@@ -7,18 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Adapters.MessagesAdapter;
-import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
+import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.POJO.WhatsUpUtils;
-import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentChatBinding;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +50,11 @@ public class ChatFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater);
+
+        WhatsUpUtils.closeAnyNotification(getContext(), (int)(Long.parseLong(user.getPhoneNumber().substring(1))/100000));
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(Constants.CURRENT_FRIEND_CHAT,user.getImageUrl()).apply();
+
         MessagesAdapter adapter = new MessagesAdapter(new ArrayList<>());
         adapter.setListener(listener);
         binding.recChat.setAdapter(adapter);
@@ -251,10 +255,10 @@ public class ChatFragment extends Fragment {
                 } else {
 
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
-                            , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext(), messages.get(messages.size() - 1).getSenderId());
+                            , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext(), messages.get(messages.size() - 1).getSenderId(),user.getToken());
 
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
-                            , user.getUserId(), currentUser, getContext(), messages.get(messages.size() - 1).getSenderId());
+                            , user.getUserId(), currentUser, getContext(), messages.get(messages.size() - 1).getSenderId(),user.getToken());
 
                 }
             }
@@ -272,6 +276,7 @@ public class ChatFragment extends Fragment {
         super.onDestroy();
         user = null;
         binding = null;
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().remove(Constants.CURRENT_FRIEND_CHAT).apply();
     }
 
     @Override
@@ -279,6 +284,7 @@ public class ChatFragment extends Fragment {
         super.onAttach(context);
         listener = (OnChildChangeListener) context;
     }
+
 
 
 }
