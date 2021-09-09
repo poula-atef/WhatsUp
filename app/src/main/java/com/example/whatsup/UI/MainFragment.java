@@ -152,8 +152,8 @@ public class MainFragment extends Fragment implements onItemClickListener {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                users.clear();
+                if (users != null)
+                    users.clear();
                 for (DataSnapshot shot : snapshot.getChildren()) {
                     User user = shot.getValue(User.class);
                     if (users != null && !user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))

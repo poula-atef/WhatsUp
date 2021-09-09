@@ -27,10 +27,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.whatsup.POJO.Adapters.MessagesAdapter;
 import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.NotificationData;
@@ -60,8 +62,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
@@ -305,7 +309,8 @@ public class WhatsUpUtils {
                                                 currentUser.getUserName()
                                                 , friend.getLastMessage()
                                                 , currentUser.getImageUrl()
-                                                ,Long.parseLong(currentUser.getPhoneNumber().substring(1)))
+                                                , Long.parseLong(currentUser.getPhoneNumber().substring(1))
+                                                , currentUser.getUserId())
                                                 , receiverToken));
                                     }
                                 }
@@ -367,7 +372,7 @@ public class WhatsUpUtils {
                 PendingIntent pendingIntent = PendingIntent
                         .getActivities(context, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                int notificationId = (int)(Long.parseLong(message.getData().get("senderNumber"))/100000);
+                int notificationId = (int) (Long.parseLong(message.getData().get("senderNumber")) / 100000);
 
                 Notification notification = new NotificationCompat.Builder(context, Constants.CHANNEL_ID)
                         .setContentTitle(message.getData().get("title"))
@@ -375,8 +380,8 @@ public class WhatsUpUtils {
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(R.drawable.ic_message)
                         .setLargeIcon(resource)
-                        .addAction(createReplayAction(context,notificationId))
-                        .addAction(createSeenAction(context,notificationId))
+                        .addAction(createReplayAction(context, notificationId, message.getData().get("senderId")))
+                        .addAction(createSeenAction(context, notificationId, message.getData().get("senderId")))
                         .build();
 
                 manager.notify(notificationId, notification);
@@ -385,20 +390,22 @@ public class WhatsUpUtils {
         });
     }
 
-    private static NotificationCompat.Action createSeenAction(Context context, int notificationId) {
+    private static NotificationCompat.Action createSeenAction(Context context, int notificationId, String senderId) {
         Intent intent = new Intent(context, NotificationBroadcastReceiver.class);
         intent.setAction(Constants.SEEN);
-        intent.putExtra("notification_id",notificationId);
+        intent.putExtra("notification_id", notificationId);
+        intent.putExtra("sender_id", senderId);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(null, Constants.SEEN, pendingIntent).build();
         return action;
     }
 
-    private static NotificationCompat.Action createReplayAction(Context context, int notificationId) {
+    private static NotificationCompat.Action createReplayAction(Context context, int notificationId, String senderId) {
         RemoteInput remoteInput = new RemoteInput.Builder(Constants.REPLAY_RESULT_KEY).setLabel("Replay..").build();
         Intent intent = new Intent(context, NotificationBroadcastReceiver.class);
         intent.setAction(Constants.REPLAY);
-        intent.putExtra("notification_id",notificationId);
+        intent.putExtra("notification_id", notificationId);
+        intent.putExtra("sender_id", senderId);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(null, Constants.REPLAY, pendingIntent).addRemoteInput(remoteInput).build();
         return action;
@@ -414,9 +421,37 @@ public class WhatsUpUtils {
     }
 
 
-    public static void closeAnyNotification(Context context, int notificationId){
+    public static void closeAnyNotification(Context context, int notificationId) {
         NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         manager.cancel(notificationId);
     }
+
+
+
+    public static void markMessagesAsSeen(String firstUserId,String secondUserId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("messages")
+                .child(firstUserId)
+                .child(secondUserId);
+        final DatabaseReference ref = reference;
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot shot : snapshot.getChildren()) {
+                    Message message = shot.getValue(Message.class);
+                    if (message.getReceiverId().equals(secondUserId)) {
+                        message.setSeen(2);
+                        ref.child(shot.getKey()).setValue(message);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 
 }

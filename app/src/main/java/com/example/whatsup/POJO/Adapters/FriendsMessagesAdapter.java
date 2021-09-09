@@ -55,10 +55,10 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
             holder.message.setVisibility(View.VISIBLE);
             holder.imgMessage.setVisibility(View.GONE);
             if(friends.get(position).getSeen() == 1){
-                holder.message.setTypeface(holder.message.getTypeface(), Typeface.BOLD);
+                holder.message.setTypeface(null, Typeface.BOLD);
             }
             else{
-                holder.message.setTypeface(holder.message.getTypeface(), Typeface.NORMAL);
+                holder.message.setTypeface(null, Typeface.NORMAL);
             }
         } else {
             holder.message.setVisibility(View.GONE);
