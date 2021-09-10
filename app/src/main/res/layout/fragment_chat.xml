@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.motion.widget.MotionLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/blue1"
+    app:layoutDescription="@xml/fragment_chat_scene"
     tools:context=".UI.ChatFragment">
 
     <FrameLayout
@@ -21,18 +22,19 @@
 
         <View
             android:id="@+id/active"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom|center"
-            android:visibility="invisible"
             android:background="@drawable/rounded_corner_back"
             android:backgroundTint="@color/active_green"
             android:elevation="2dp" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="@dimen/_55sdp"
-            android:layout_height="@dimen/_55sdp"
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_margin="@dimen/_3sdp"
             app:cardCornerRadius="@dimen/_5sdp">
 
             <ImageView
@@ -49,38 +51,38 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@drawable/rounded_top_back"
+        android:orientation="vertical"
+        android:weightSum="8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.78"
-        android:weightSum="8"
-        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_chat"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_10sdp" />
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_weight="7" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:weightSum="10"
             android:background="#eee"
-            >
+            android:orientation="horizontal"
+            android:weightSum="10">
+
             <ImageView
                 android:id="@+id/add_img_chat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.3"
                 android:layout_marginStart="@dimen/_2sdp"
                 android:layout_marginEnd="@dimen/_2sdp"
-                android:src="@drawable/ic_photo"
-                />
+                android:layout_weight="1.3"
+                android:src="@drawable/ic_photo" />
+
             <EditText
                 android:id="@+id/et_message"
                 android:layout_width="0dp"
@@ -89,60 +91,46 @@
                 android:background="@drawable/rounded_corner_back"
                 android:backgroundTint="#eee"
                 android:hint="@string/message"
-                android:textColorHint="@color/blue3"
-                android:textColor="@color/blue1"
                 android:paddingStart="@dimen/_5sdp"
-                />
+                android:textColor="@color/blue1"
+                android:textColorHint="@color/blue3" />
+
             <ImageView
                 android:id="@+id/send_message"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1.3"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_send"
-                />
+                android:layout_weight="1.3"
+                android:src="@drawable/ic_send" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/back_to_main"
-        android:layout_width="@dimen/_25sdp"
-        android:layout_height="@dimen/_25sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:onClick="onComponentClick"
-        android:src="@drawable/ic_back_arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/_5sdp"
+        android:text="@string/sample_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_25ssp"
+        android:layout_marginStart="@dimen/_2sdp"
+        app:layout_constraintBottom_toBottomOf="@id/frameLayout2"
+        app:layout_constraintLeft_toRightOf="@id/frameLayout2"
+        app:layout_constraintTop_toTopOf="@id/frameLayout2"
+        app:layout_constraintVertical_bias="0.15" />
+
+    <TextView
+        android:id="@+id/last_seen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="last seen in augast"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12ssp"
         app:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/frameLayout2"
-        app:layout_constraintTop_toTopOf="@+id/frameLayout2">
-
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sample_name"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_25ssp" />
-
-        <TextView
-            android:id="@+id/last_seen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="@color/white"
-            android:textSize="@dimen/_12ssp" />
-
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.motion.widget.MotionLayout>

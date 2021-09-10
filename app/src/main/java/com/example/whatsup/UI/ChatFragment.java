@@ -54,6 +54,7 @@ public class ChatFragment extends Fragment {
         WhatsUpUtils.closeAnyNotification(getContext(), (int) (Long.parseLong(user.getPhoneNumber().substring(1)) / 100000));
 
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(Constants.CURRENT_FRIEND_CHAT, user.getImageUrl()).apply();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(Constants.CURRENT_FRIEND_TOKEN, user.getToken()).apply();
 
         MessagesAdapter adapter = new MessagesAdapter(new ArrayList<>());
         adapter.setListener(listener);
@@ -261,6 +262,17 @@ public class ChatFragment extends Fragment {
                     ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
                     ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
 
+                    if (!messages.isEmpty()) {
+                        FirebaseDatabase.getInstance()
+                                .getReference("users")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("friends")
+                                .child(user.getUserId())
+                                .child("seen")
+                                .setValue(2);
+                    }
+
+
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
                             , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext(), messages.get(messages.size() - 1).getSenderId()
                             , user.getToken());
@@ -285,6 +297,7 @@ public class ChatFragment extends Fragment {
         user = null;
         binding = null;
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().remove(Constants.CURRENT_FRIEND_CHAT).apply();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().remove(Constants.CURRENT_FRIEND_TOKEN).apply();
     }
 
     @Override

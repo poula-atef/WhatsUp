@@ -12,4 +12,5 @@ public class Constants {
     public static final String REPLAY = "Replay";
     public static final String SEEN = "mark as seen";
     public static final String CURRENT_FRIEND_CHAT = "current_friend_chat";
+    public static final String CURRENT_FRIEND_TOKEN = "current_friend_token";
 }
