@@ -34,20 +34,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
-        String imgUrl = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_FRIEND_CHAT,"?");
-        if(!imgUrl.equals("?") && imgUrl.equals(message.getData().get("imgUrl")))
+        String imgUrl = PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.CURRENT_FRIEND_CHAT, "?");
+        if (!imgUrl.equals("?") && imgUrl.equals(message.getData().get("imgUrl")))
             return;
-        WhatsUpUtils.createNotification(message,this);
+        WhatsUpUtils.createNotification(message, this,null);
     }
 
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        FirebaseDatabase
-                .getInstance()
-                .getReference("users")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child("token")
-                .setValue(s);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseDatabase
+                    .getInstance()
+                    .getReference("users")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("token")
+                    .setValue(s);
+        }
     }
 }

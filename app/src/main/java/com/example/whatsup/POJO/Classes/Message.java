@@ -4,6 +4,9 @@ public class Message {
     private String senderId;
     private String receiverId;
     private String Message;
+    private String senderNumber;
+    private String senderImg;
+    private String senderName;
     private boolean img;
     private String time;
     private String imageUrl;
@@ -12,7 +15,8 @@ public class Message {
     public Message() {
     }
 
-    public Message(String senderId, String receiverId, String message, boolean img, String time, String imageUrl, int seen) {
+    public Message(String senderId, String receiverId, String message, boolean img, String time,
+                   String imageUrl, int seen,String senderNumber,String senderImg,String senderName) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         Message = message;
@@ -20,6 +24,9 @@ public class Message {
         this.time = time;
         this.imageUrl = imageUrl;
         this.seen = seen;
+        this.senderNumber = senderNumber;
+        this.senderImg = senderImg;
+        this.senderName = senderName;
     }
 
     public String getSenderId() {
@@ -76,5 +83,29 @@ public class Message {
 
     public void setSeen(int seen) {
         this.seen = seen;
+    }
+
+    public String getSenderNumber() {
+        return senderNumber;
+    }
+
+    public void setSenderNumber(String senderNumber) {
+        this.senderNumber = senderNumber;
+    }
+
+    public String getSenderImg() {
+        return senderImg;
+    }
+
+    public void setSenderImg(String senderImg) {
+        this.senderImg = senderImg;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }

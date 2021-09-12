@@ -1,38 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:motion="http://schemas.android.com/apk/res-auto"
-    xmlns:app="http://schemas.android.com/tools">
+    xmlns:app="urn:oasis:names:tc:xliff:document:1.2">
 
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
         motion:duration="500">
-        <OnClick motion:targetId="@id/frameLayout2" motion:clickAction="toggle"/>
+        <OnSwipe
+            motion:dragDirection="dragUp"
+            motion:onTouchUp="autoCompleteToEnd"
+            motion:touchAnchorId="@id/frameLayout"
+            motion:touchAnchorSide="top" />
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
-        <Constraint
-            android:id="@+id/frameLayout2"/>
-        <Constraint
-            android:id="@+id/active"/>
-        <Constraint
-            android:id="@+id/card_view"/>
-        <Constraint
-            android:id="@+id/username"
-            >
+        <Constraint android:id="@+id/frameLayout2" />
+        <Constraint android:id="@+id/active" />
+        <Constraint android:id="@+id/card_view" />
+        <Constraint android:id="@+id/username">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_10ssp"/>
+                motion:customDimension="@dimen/_10ssp" />
         </Constraint>
-        <Constraint
-            android:id="@+id/last_seen"
-            >
+        <Constraint android:id="@+id/last_seen">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_5ssp"/>
+                motion:customDimension="@dimen/_5ssp" />
         </Constraint>
-        <Constraint
-            android:id="@+id/frameLayout" />
+        <Constraint android:id="@+id/frameLayout" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -40,14 +36,14 @@
 
         <Constraint
             android:id="@+id/frameLayout2"
-            motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
             motion:layout_constraintBottom_toTopOf="@+id/frameLayout"
-            motion:layout_constraintVertical_bias="0.5"
+            motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.15"
+            motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="parent"
-            motion:layout_constraintStart_toStartOf="parent" />
+            motion:layout_constraintVertical_bias="0.5" />
 
         <Constraint
             android:id="@+id/active"
@@ -57,61 +53,59 @@
             android:background="@drawable/rounded_corner_back"
             android:backgroundTint="@color/active_green"
             android:elevation="2dp"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
         <Constraint
             android:id="@+id/card_view"
             android:layout_width="@dimen/_27sdp"
             android:layout_height="@dimen/_27sdp"
             android:layout_gravity="center"
-            app:cardCornerRadius="@dimen/_5sdp"/>
+            app:cardCornerRadius="@dimen/_5sdp" />
 
         <Constraint
             android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:text="@string/sample_name"
             android:textColor="@color/white"
-            android:gravity="start"
+            app:layout_constraintBottom_toBottomOf="@id/frameLayout2"
             app:layout_constraintLeft_toRightOf="@id/frameLayout2"
             app:layout_constraintTop_toTopOf="@id/frameLayout2"
-            motion:layout_constraintTop_toTopOf="@+id/frameLayout2"
-            motion:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
-            app:layout_constraintBottom_toBottomOf="@id/frameLayout2"
-            motion:layout_constraintStart_toEndOf="@+id/frameLayout2"
             app:layout_constraintVertical_bias="0.1"
-            motion:layout_constraintVertical_bias="0.1"
-            >
+            motion:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
+            motion:layout_constraintStart_toEndOf="@+id/frameLayout2"
+            motion:layout_constraintTop_toTopOf="@+id/frameLayout2"
+            motion:layout_constraintVertical_bias="0.1">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_5ssp"/>
+                motion:customDimension="@dimen/_5ssp" />
         </Constraint>
 
         <Constraint
             android:id="@+id/last_seen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:text="last seen in augast"
             android:textColor="@color/white"
-            android:gravity="start"
             app:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
             app:layout_constraintStart_toStartOf="@+id/username"
             app:layout_constraintTop_toBottomOf="@+id/username"
             motion:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
             motion:layout_constraintStart_toStartOf="@+id/username"
-            motion:layout_constraintTop_toBottomOf="@+id/username"
-            >
+            motion:layout_constraintTop_toBottomOf="@+id/username">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_3ssp"/>
+                motion:customDimension="@dimen/_3ssp" />
         </Constraint>
 
         <Constraint
             android:id="@+id/frameLayout"
-            motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHeight_percent="0.88"
             motion:layout_constraintStart_toStartOf="parent" />
 

@@ -8,17 +8,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".UI.LogFragment">
 
-    <ImageView
-        android:id="@+id/back_to_splash"
-        android:layout_width="@dimen/_25sdp"
-        android:layout_height="@dimen/_25sdp"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:onClick="onComponentClick"
-        android:src="@drawable/ic_back_arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <EditText
         android:id="@+id/country_code"
         android:layout_width="@dimen/_50sdp"

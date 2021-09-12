@@ -2,15 +2,14 @@ package com.example.whatsup.UI;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Adapters.MessagesAdapter;
@@ -18,8 +17,8 @@ import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.POJO.WhatsUpUtils;
-import com.example.whatsup.databinding.FragmentChatBinding;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
+import com.example.whatsup.databinding.FragmentChatBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,13 +42,13 @@ public class ChatFragment extends Fragment {
 
     }
 
-    public ChatFragment(User user) {
-        this.user = user;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentChatBinding.inflate(inflater);
+
+
+        user = getArguments().getParcelable("user");
 
         WhatsUpUtils.closeAnyNotification(getContext(), (int) (Long.parseLong(user.getPhoneNumber().substring(1)) / 100000));
 
@@ -57,7 +56,6 @@ public class ChatFragment extends Fragment {
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(Constants.CURRENT_FRIEND_TOKEN, user.getToken()).apply();
 
         MessagesAdapter adapter = new MessagesAdapter(new ArrayList<>());
-        adapter.setListener(listener);
         binding.recChat.setAdapter(adapter);
         binding.recChat.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -78,7 +76,9 @@ public class ChatFragment extends Fragment {
                     return;
                 updated = false;
                 Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUserId()
-                        , binding.etMessage.getText().toString(), false, WhatsUpUtils.getCurrentTimeFormat(), "", 1);
+                        , binding.etMessage.getText().toString(), false, WhatsUpUtils.getCurrentTimeFormat(), "", 1
+                        , currentUser.getPhoneNumber(), currentUser.getImageUrl(), currentUser.getUserName());
+
                 WhatsUpUtils.sendMessage(message, getContext(), user);
                 binding.etMessage.getText().clear();
             }
@@ -136,22 +136,41 @@ public class ChatFragment extends Fragment {
                     }
                     messages.add(message);
                 }
-                if (!updated) {
-                    updated = true;
-                    ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
-                    ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
-                    ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
+//                if (!updated) {
+//                    updated = true;
+//                    ((MessagesAdapter) binding.recChat.getAdapter()).setMessages(messages);
+//                    ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
+//                    ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
+//
+                if (!messages.isEmpty()) {
+                    FirebaseDatabase.getInstance()
+                            .getReference("users")
+                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("friends").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (user == null)
+                                return;
+                            for (DataSnapshot shot : snapshot.getChildren()) {
+                                if (shot.getKey().equals(user.getUserId())) {
+                                    FirebaseDatabase.getInstance()
+                                            .getReference("users")
+                                            .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                            .child("friends")
+                                            .child(user.getUserId())
+                                            .child("seen")
+                                            .setValue(2);
+                                }
+                            }
+                        }
 
-                    if (!messages.isEmpty()) {
-                        FirebaseDatabase.getInstance()
-                                .getReference("users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child("friends")
-                                .child(user.getUserId())
-                                .child("seen")
-                                .setValue(2);
-                    }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
+//                }
             }
 
             @Override
@@ -200,37 +219,6 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    private void updateUserData() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference().child("users").child(user.getUserId());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (binding == null || binding.recChat.getAdapter() == null)
-                    return;
-                User user1 = snapshot.getValue(User.class);
-                if (user == null || user1 == null)
-                    return;
-                if (user.isActive() != user1.isActive()) {
-                    if (user1.isActive() && user1.getLastSeen().equals("online")) {
-                        binding.active.setVisibility(View.VISIBLE);
-                        binding.lastSeen.setText(user1.getLastSeen());
-
-                        user = user1;
-                    } else if (!user1.isActive() && !user1.getLastSeen().equals("online")) {
-                        binding.active.setVisibility(View.INVISIBLE);
-                        binding.lastSeen.setText("Last seen at " + user1.getLastSeen());
-                        user = user1;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     private void getAllChatMessages(User user) {
 
@@ -262,16 +250,6 @@ public class ChatFragment extends Fragment {
                     ((LinearLayoutManager) binding.recChat.getLayoutManager()).scrollToPosition(messages.size() - 1);
                     ((MessagesAdapter) binding.recChat.getAdapter()).notifyDataSetChanged();
 
-                    if (!messages.isEmpty()) {
-                        FirebaseDatabase.getInstance()
-                                .getReference("users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child("friends")
-                                .child(user.getUserId())
-                                .child("seen")
-                                .setValue(2);
-                    }
-
 
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
                             , FirebaseAuth.getInstance().getCurrentUser().getUid(), user, getContext(), messages.get(messages.size() - 1).getSenderId()
@@ -280,6 +258,39 @@ public class ChatFragment extends Fragment {
                     WhatsUpUtils.setUserFriendLastMessage(messages.get(messages.size() - 1)
                             , user.getUserId(), currentUser, getContext(), messages.get(messages.size() - 1).getSenderId(), user.getToken());
 
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
+    private void updateUserData() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("users").child(user.getUserId());
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (binding == null || binding.recChat.getAdapter() == null)
+                    return;
+                User user1 = snapshot.getValue(User.class);
+                if (user == null || user1 == null)
+                    return;
+                if (user.isActive() != user1.isActive()) {
+                    if (user1.isActive() && user1.getLastSeen().equals("online")) {
+                        binding.active.setVisibility(View.VISIBLE);
+                        binding.lastSeen.setText(user1.getLastSeen());
+
+                        user = user1;
+                    } else if (!user1.isActive() && !user1.getLastSeen().equals("online")) {
+                        binding.active.setVisibility(View.INVISIBLE);
+                        binding.lastSeen.setText("Last seen at " + user1.getLastSeen());
+                        user = user1;
+                    }
                 }
             }
 

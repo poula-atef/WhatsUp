@@ -13,6 +13,7 @@
         android:theme="@style/Theme.Whatsup" >
         <activity
             android:name=".UI.MainActivity"
+            android:launchMode="singleTop"
             android:exported="true"
             >
             <intent-filter>

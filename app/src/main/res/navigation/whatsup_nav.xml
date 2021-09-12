@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/whatsup_nav"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.whatsup.UI.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_logFragment"
+            app:destination="@id/logFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+        <action
+            android:id="@+id/action_splashFragment_to_userDetailsFragment"
+            app:destination="@id/userDetailsFragment"
+            app:popUpTo="@id/whatsup_nav"
+            />
+        <action
+            android:id="@+id/action_splashFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/whatsup_nav" />
+    </fragment>
+    <fragment
+        android:id="@+id/logFragment"
+        android:name="com.example.whatsup.UI.LogFragment"
+        android:label="fragment_log"
+        tools:layout="@layout/fragment_log" >
+        <action
+            android:id="@+id/action_logFragment_to_confirmationFragment"
+            app:destination="@id/confirmationFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            app:popUpTo="@id/whatsup_nav" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/confirmationFragment"
+        android:name="com.example.whatsup.UI.ConfirmationFragment"
+        android:label="fragment_confirmation"
+        tools:layout="@layout/fragment_confirmation" >
+        <action
+            android:id="@+id/action_confirmationFragment_to_userDetailsFragment"
+            app:destination="@id/userDetailsFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            app:popUpTo="@id/whatsup_nav" />
+    </fragment>
+    <fragment
+        android:id="@+id/userDetailsFragment"
+        android:name="com.example.whatsup.UI.UserDetailsFragment"
+        android:label="fragment_user_details"
+        tools:layout="@layout/fragment_user_details" >
+        <action
+            android:id="@+id/action_userDetailsFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            app:popUpTo="@id/whatsup_nav" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.whatsup.UI.MainFragment"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_splashFragment"
+            app:destination="@id/splashFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+        <action
+            android:id="@+id/action_mainFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+        <action
+            android:id="@+id/action_mainFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.whatsup.UI.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_imageFragment"
+            app:destination="@id/imageFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+        <action
+            android:id="@+id/action_chatFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.whatsup.UI.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.example.whatsup.UI.ImageFragment"
+        android:label="fragment_image"
+        tools:layout="@layout/fragment_image" >
+        <action
+            android:id="@+id/action_imageFragment_to_chatFragment"
+            app:destination="@id/chatFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            />
+    </fragment>
+</navigation>

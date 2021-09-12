@@ -2,16 +2,19 @@ package com.example.whatsup.UI;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.ActionOnlyNavDirections;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
+import com.example.whatsup.POJO.Classes.User;
+import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentConfirmationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,24 +22,26 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class ConfirmationFragment extends Fragment {
 
     private FragmentConfirmationBinding binding;
     private String verificationId;
-    private OnChildChangeListener listener;
 
     public ConfirmationFragment() {
     }
 
-    public ConfirmationFragment(String verificationId) {
-        this.verificationId = verificationId;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentConfirmationBinding.inflate(inflater);
+
+        verificationId = getArguments().getString("verificationId");
 
         binding.confirm.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +57,9 @@ public class ConfirmationFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            listener.onChildChangeWithoutStack(new UserDetailsFragment());
-                        }
-                        else{
+                            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_confirmationFragment_to_userDetailsFragment);
+
+                        } else {
                             Toast.makeText(getContext(), "Unexpected Error happened, try again later !!", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -69,7 +74,6 @@ public class ConfirmationFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        listener = (OnChildChangeListener) context;
     }
 
     @Override

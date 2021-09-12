@@ -15,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.RemoteInput;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +45,7 @@ import com.example.whatsup.POJO.FCM.NotificationBroadcastReceiver;
 import com.example.whatsup.R;
 import com.example.whatsup.UI.ConfirmationFragment;
 import com.example.whatsup.UI.MainActivity;
+import com.example.whatsup.UI.UserDetailsFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -92,7 +95,7 @@ public class WhatsUpUtils {
 
     }
 
-    public static void signUpWithPhoneNumber(OnChildChangeListener listener, String countryCode, String phoneNumber, Activity activity) {
+    public static void signUpWithPhoneNumber(View view, String countryCode, String phoneNumber, Activity activity) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
@@ -109,8 +112,9 @@ public class WhatsUpUtils {
             @Override
             public void onCodeSent(@NonNull String verificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(verificationId, forceResendingToken);
-
-                listener.onChildChangeWithoutStack(new ConfirmationFragment(verificationId));
+                Bundle bundle = new Bundle();
+                bundle.putString("verificationId", verificationId);
+                Navigation.findNavController(view).navigate(R.id.action_logFragment_to_confirmationFragment, bundle);
             }
         };
 
@@ -126,25 +130,48 @@ public class WhatsUpUtils {
     }
 
     public static void setUserDataToFirebaseDatabase(String userName, String birthDate, String phoneNumber, String uid, Context context) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference("users").child(uid);
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (task.isSuccessful()) {
-                    String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile", "");
-                    User user = new User(userName, birthDate, phoneNumber, true, null, imageUrl, uid, "online", task.getResult());
-                    reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
+        FirebaseDatabase
+                .getInstance()
+                .getReference("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        boolean found = false;
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            User user = shot.getValue(User.class);
+                            if (user.getUserId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                return;
                             }
                         }
-                    });
-                }
-            }
-        });
+                        if (!found) {
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference reference = database.getReference("users").child(uid);
+                            FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+                                @Override
+                                public void onComplete(@NonNull Task<String> task) {
+                                    if (task.isSuccessful()) {
+                                        String imageUrl = PreferenceManager.getDefaultSharedPreferences(context).getString("profile", "");
+                                        User user = new User(userName, birthDate, phoneNumber, true, null, imageUrl, uid, "online", task.getResult());
+                                        reference.setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (!task.isSuccessful()) {
+                                                    Toast.makeText(context, "Unexpected Error Happened, try again later !!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
     }
 
     public static void saveImageInFirebaseStorage(Uri imageUri, Context context, Activity activity) {
@@ -191,21 +218,21 @@ public class WhatsUpUtils {
     }
 
     public static void makeMeOnline() {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        reference.child("active").setValue(true);
-        reference.child("lastSeen").setValue("online");
-
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            reference.child("active").setValue(true);
+            reference.child("lastSeen").setValue("online");
+        }
     }
 
     public static void makeMeOffline() {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        reference.child("active").setValue(false);
-        reference.child("lastSeen").setValue(getCurrentTimeFormat());
-
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference reference = database.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            reference.child("active").setValue(false);
+            reference.child("lastSeen").setValue(getCurrentTimeFormat());
+        }
     }
 
 
@@ -223,7 +250,10 @@ public class WhatsUpUtils {
                         public void onComplete(@NonNull Task<Uri> task) {
                             if (task.isSuccessful()) {
                                 Message message = new Message(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUserId()
-                                        , "", true, getCurrentTimeFormat(), task.getResult().toString(), 1);
+                                        , "", true, getCurrentTimeFormat(), task.getResult().toString()
+                                        , 1, FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber()
+                                        , PreferenceManager.getDefaultSharedPreferences(context).getString("profile", "?")
+                                        , PreferenceManager.getDefaultSharedPreferences(context).getString("user_name", "?"));
                                 sendMessage(message, context, user);
                             }
                         }
@@ -320,8 +350,17 @@ public class WhatsUpUtils {
                                         .child("friends")
                                         .child(currentUser.getUserId())
                                         .setValue(friend);
-                                break;
+                                //break;
                             }
+                        }
+                        if (snapshot.getValue() == null) {
+                            friend.setSeen(1);
+                            FirebaseDatabase.getInstance()
+                                    .getReference("users")
+                                    .child(userId)
+                                    .child("friends")
+                                    .child(currentUser.getUserId())
+                                    .setValue(friend);
                         }
                     }
 
@@ -357,7 +396,16 @@ public class WhatsUpUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public static void createNotification(RemoteMessage message, Context context) {
+    public static void createNotification(RemoteMessage remoteMessage, Context context, Message message) {
+
+        if (message == null) {
+            message = new Message();
+            message.setSenderNumber(remoteMessage.getData().get("senderNumber"));
+            message.setSenderImg(remoteMessage.getData().get("imgUrl"));
+            message.setSenderId(remoteMessage.getData().get("senderId"));
+            message.setSenderName(remoteMessage.getData().get("title"));
+            message.setMessage(remoteMessage.getData().get("message"));
+        }
 
         NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
 
@@ -365,23 +413,31 @@ public class WhatsUpUtils {
             createNotificationChannel(manager);
         }
 
-        Glide.with(context).asBitmap().load(message.getData().get("imgUrl")).into(new SimpleTarget<Bitmap>() {
+        int notificationId = (int) (Long.parseLong(message.getSenderNumber().substring(1)) / 100000);
+        Message finalMessage = message;
+        Glide.with(context).asBitmap().load(message.getSenderImg()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 Intent intent = new Intent(context, MainActivity.class);
                 PendingIntent pendingIntent = PendingIntent
                         .getActivities(context, 0, new Intent[]{intent}, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                int notificationId = (int) (Long.parseLong(message.getData().get("senderNumber")) / 100000);
+                PreferenceManager
+                        .getDefaultSharedPreferences(context)
+                        .edit()
+                        .putString("user_id", finalMessage.getSenderId())
+                        .putInt("notification_id", notificationId)
+                        .apply();
+
 
                 Notification notification = new NotificationCompat.Builder(context, Constants.CHANNEL_ID)
-                        .setContentTitle(message.getData().get("title"))
-                        .setContentText(message.getData().get("message"))
+                        .setContentTitle(finalMessage.getSenderName())
+                        .setContentText(finalMessage.getMessage())
                         .setContentIntent(pendingIntent)
                         .setSmallIcon(R.drawable.ic_message)
                         .setLargeIcon(resource)
-                        .addAction(createReplayAction(context, notificationId, message.getData().get("senderId")))
-                        .addAction(createSeenAction(context, notificationId, message.getData().get("senderId")))
+                        .addAction(createReplayAction(context, notificationId, finalMessage.getSenderId()))
+                        .addAction(createSeenAction(context, notificationId, finalMessage.getSenderId()))
                         .build();
 
                 manager.notify(notificationId, notification);
@@ -427,8 +483,7 @@ public class WhatsUpUtils {
     }
 
 
-
-    public static void markMessagesAsSeen(String firstUserId,String secondUserId) {
+    public static void markMessagesAsSeen(String firstUserId, String secondUserId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("messages")
                 .child(firstUserId)
@@ -451,6 +506,64 @@ public class WhatsUpUtils {
 
             }
         });
+    }
+
+
+    public static void checkNotificationIntent(Context context, View view) {
+        String userId = PreferenceManager.getDefaultSharedPreferences(context).getString("user_id", "?");//intent.getStringExtra("user_id");
+        int notificationId = PreferenceManager.getDefaultSharedPreferences(context).getInt("notification_id", 1);//intent.getIntExtra("notification_id",1);
+        if (userId.equals("?"))
+            return;
+        FirebaseDatabase
+                .getInstance()
+                .getReference("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot shot : snapshot.getChildren()) {
+                            User user = shot.getValue(User.class);
+                            if (user.getUserId().equals(userId)) {
+                                PreferenceManager
+                                        .getDefaultSharedPreferences(context)
+                                        .edit()
+                                        .remove("user_id")
+                                        .remove("notification_id")
+                                        .apply();
+                                closeAnyNotification(context, notificationId);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("user", user);
+                                Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_chatFragment, bundle);
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+
+    public static void determineStartFragment(Context context, View view) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            if (checkDataComplete(context)) {
+                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_userDetailsFragment);
+            } else {
+                WhatsUpUtils.makeMeOnline();
+                Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_mainFragment);
+            }
+        }
+
+    }
+
+
+    private static boolean checkDataComplete(Context context) {
+        return PreferenceManager.getDefaultSharedPreferences(context).getString("profile", "?").equals("?")
+                || PreferenceManager.getDefaultSharedPreferences(context).getString("user_name", "?").equals("?")
+                || PreferenceManager.getDefaultSharedPreferences(context).getString("birth_date", "?").equals("?");
     }
 
 
