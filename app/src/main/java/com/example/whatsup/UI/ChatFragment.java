@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +18,7 @@ import com.example.whatsup.POJO.Classes.Message;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.POJO.WhatsUpUtils;
+import com.example.whatsup.R;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
 import com.example.whatsup.databinding.FragmentChatBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -79,7 +81,7 @@ public class ChatFragment extends Fragment {
                         , binding.etMessage.getText().toString(), false, WhatsUpUtils.getCurrentTimeFormat(), "", 1
                         , currentUser.getPhoneNumber(), currentUser.getImageUrl(), currentUser.getUserName());
 
-                WhatsUpUtils.sendMessage(message, getContext(), user);
+                WhatsUpUtils.sendMessage(message, getContext(), user,currentUser);
                 binding.etMessage.getText().clear();
             }
         });
@@ -88,6 +90,30 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 listener.sendImageMessage(user);
+            }
+        });
+
+        binding.videoCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("call_type","Video Call");
+                bundle.putString("receiver_token",user.getToken());
+                bundle.putString("receiver_name",user.getUserName());
+                bundle.putString("receiver_number",user.getPhoneNumber());
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment,bundle);
+            }
+        });
+
+        binding.voiceCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("call_type","Voice Call");
+                bundle.putString("receiver_token",user.getToken());
+                bundle.putString("receiver_name",user.getUserName());
+                bundle.putString("receiver_number",user.getPhoneNumber());
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment,bundle);
             }
         });
 

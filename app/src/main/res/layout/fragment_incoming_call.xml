@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/grediant_back"
+    tools:context=".UI.IncomingCallFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/incoming_call"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintBottom_toTopOf="@+id/call_type"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/call_type"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
+        android:src="@drawable/ic_video"
+        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintBottom_toTopOf="@+id/username_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/username_avatar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="P"
+        android:textSize="@dimen/_80ssp"
+        android:gravity="center"
+        android:textColor="#000"
+        app:layout_constraintHeight_percent="0.2"
+        app:layout_constraintWidth_percent="0.35"
+        android:background="@drawable/rounded_corner_avatar"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="poula atef"
+        android:textColor="#fff"
+        android:textSize="@dimen/_20ssp"
+        app:layout_constraintEnd_toEndOf="@+id/username_avatar"
+        app:layout_constraintStart_toStartOf="@+id/username_avatar"
+        app:layout_constraintTop_toBottomOf="@+id/username_avatar" />
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="01204562237"
+        android:alpha="0.7"
+        android:textColor="#fff"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintEnd_toEndOf="@+id/username"
+        app:layout_constraintStart_toStartOf="@+id/username"
+        app:layout_constraintTop_toBottomOf="@+id/username" />
+
+
+
+
+
+    <ImageButton
+        android:id="@+id/cancel_call"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:background="@drawable/et_rounded_back"
+        android:backgroundTint="#dd0000"
+        android:src="@drawable/ic_clear"
+        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone"
+        />
+
+    <ImageButton
+        android:id="@+id/accept_call"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:background="@drawable/et_rounded_back"
+        android:backgroundTint="#00dd00"
+        android:src="@drawable/ic_correct"
+        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintHorizontal_bias="0.25"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

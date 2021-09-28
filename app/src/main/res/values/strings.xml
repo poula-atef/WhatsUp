@@ -17,4 +17,6 @@
     <string name="seen">seen</string>
     <string name="photo">Photo</string>
     <string name="WHATSUP_IMG_CONSTANT">WHATSUP_IMG_CONSTANT</string>
+    <string name="incoming_call">Incoming Call</string>
+    <string name="outgoing_call">Outgoing Call</string>
 </resources>

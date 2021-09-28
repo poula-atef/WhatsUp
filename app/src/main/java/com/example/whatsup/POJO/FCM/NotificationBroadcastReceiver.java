@@ -26,17 +26,19 @@ import com.google.firebase.database.ValueEventListener;
 
 public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
-    String TAG = "tag";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive: " + intent.getAction());
         String senderId = intent.getStringExtra("sender_id");
         if (intent.getAction().equals(Constants.SEEN)) {
 
             makeFirebaseReferenceInstance(FirebaseAuth.getInstance().getCurrentUser().getUid(), senderId)
                     .child("seen")
                     .setValue(2);
+
+            WhatsUpUtils.markMessagesAsSeen(FirebaseAuth.getInstance().getCurrentUser().getUid(), senderId);
+            WhatsUpUtils.markMessagesAsSeen(senderId, FirebaseAuth.getInstance().getCurrentUser().getUid());
+            WhatsUpUtils.closeAnyNotification(context,intent.getIntExtra("notification_id", 1));
 
         } else if (intent.getAction().equals(Constants.REPLAY)) {
 

@@ -1,15 +1,6 @@
 package com.example.whatsup.UI;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.app.DatePickerDialog;
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,17 +14,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
+
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.POJO.WhatsUpUtils;
 import com.example.whatsup.R;
-import com.example.whatsup.databinding.ActivityMainBinding;
-import com.google.firebase.auth.FirebaseAuth;
 import com.example.whatsup.UI.MainFragment.OnChildChangeListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.example.whatsup.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements OnChildChangeListener {
@@ -50,8 +45,14 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
 
         FirebaseMessaging.getInstance().subscribeToTopic(Constants.TOPIC);
 
-
         WhatsUpUtils.determineStartFragment(this,binding.getRoot());
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString(Constants.MY_TOKEN,task.getResult()).apply();
+            }
+        });
 
     }
 
@@ -102,14 +103,14 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
             String userName = ((EditText) findViewById(R.id.username_details)).getText().toString();
             String birthDate = ((TextView) findViewById(R.id.birth_date)).getText().toString();
             String phoneNumber = ((EditText) findViewById(R.id.phone_details)).getText().toString();
-            if (PreferenceManager.getDefaultSharedPreferences(this).getString("profile", "?").equals("?")
+            if (PreferenceManager.getDefaultSharedPreferences(this).getString(Constants.PROFILE_IMAGE_URL, "?").equals("?")
                     || userName.isEmpty() || birthDate.equals(getString(R.string.birth_date))) {
                 Toast.makeText(this, "All Fields are Required !!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("user_name", userName).apply();
-            PreferenceManager.getDefaultSharedPreferences(this).edit().putString("birth_date", birthDate).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(Constants.USER_NAME, userName).apply();
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putString(Constants.BIRTH_DATE, birthDate).apply();
 
             WhatsUpUtils.setUserDataToFirebaseDatabase(userName, birthDate, phoneNumber, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
             Navigation.findNavController(binding.getRoot()).navigate(R.id.action_userDetailsFragment_to_mainFragment);
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
     @Override
     protected void onPause() {
         super.onPause();
-        WhatsUpUtils.makeMeOffline();
+        WhatsUpUtils.makeMeOffline(this);
     }
 
     @Override

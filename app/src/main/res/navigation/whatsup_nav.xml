@@ -100,6 +100,10 @@
             app:popEnterAnim="@anim/enter_left_to_right"
             app:popExitAnim="@anim/exit_left_to_right"
             />
+        <action
+            android:id="@+id/action_mainFragment_to_incomingCallFragment"
+            app:destination="@id/incomingCallFragment"
+            app:popUpTo="@id/whatsup_nav" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -115,13 +119,12 @@
             app:popExitAnim="@anim/exit_left_to_right"
             />
         <action
-            android:id="@+id/action_chatFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:enterAnim="@anim/enter_right_to_left"
-            app:exitAnim="@anim/exit_right_to_left"
-            app:popEnterAnim="@anim/enter_left_to_right"
-            app:popExitAnim="@anim/exit_left_to_right"
-            />
+            android:id="@+id/action_chatFragment_to_outGoingCallFragment"
+            app:destination="@id/outgoingCallFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_incomingCallFragment"
+            app:destination="@id/incomingCallFragment"
+            app:popUpTo="@id/whatsup_nav" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -136,6 +139,10 @@
             app:popEnterAnim="@anim/enter_left_to_right"
             app:popExitAnim="@anim/exit_left_to_right"
             />
+        <action
+            android:id="@+id/action_profileFragment_to_incomingCallFragment"
+            app:destination="@id/incomingCallFragment"
+            app:popUpTo="@id/whatsup_nav" />
     </fragment>
     <fragment
         android:id="@+id/imageFragment"
@@ -143,12 +150,39 @@
         android:label="fragment_image"
         tools:layout="@layout/fragment_image" >
         <action
-            android:id="@+id/action_imageFragment_to_chatFragment"
-            app:destination="@id/chatFragment"
+            android:id="@+id/action_imageFragment_to_incomingCallFragment"
+            app:destination="@id/incomingCallFragment"
+            app:popUpTo="@id/whatsup_nav" />
+    </fragment>
+    <fragment
+        android:id="@+id/outgoingCallFragment"
+        android:name="com.example.whatsup.UI.OutgoingCallFragment"
+        android:label="fragment_out_going_call"
+        tools:layout="@layout/fragment_out_going_call" >
+        <action
+            android:id="@+id/action_outGoingCallFragment_to_chatFragment2"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_outgoingCallFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
             app:enterAnim="@anim/enter_right_to_left"
             app:exitAnim="@anim/exit_right_to_left"
             app:popEnterAnim="@anim/enter_left_to_right"
             app:popExitAnim="@anim/exit_left_to_right"
-            />
+            app:popUpTo="@id/whatsup_nav" />
+    </fragment>
+    <fragment
+        android:id="@+id/incomingCallFragment"
+        android:name="com.example.whatsup.UI.IncomingCallFragment"
+        android:label="fragment_incoming_call"
+        tools:layout="@layout/fragment_incoming_call" >
+        <action
+            android:id="@+id/action_incomingCallFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/enter_right_to_left"
+            app:exitAnim="@anim/exit_right_to_left"
+            app:popEnterAnim="@anim/enter_left_to_right"
+            app:popExitAnim="@anim/exit_left_to_right"
+            app:popUpTo="@id/whatsup_nav" />
     </fragment>
 </navigation>

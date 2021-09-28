@@ -21,14 +21,15 @@
         <Constraint android:id="@+id/username">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_10ssp" />
+                motion:customDimension="@dimen/_8ssp" />
         </Constraint>
         <Constraint android:id="@+id/last_seen">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_5ssp" />
+                motion:customDimension="@dimen/_4ssp" />
         </Constraint>
         <Constraint android:id="@+id/frameLayout" />
+
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -97,7 +98,7 @@
             motion:layout_constraintTop_toBottomOf="@+id/username">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/_3ssp" />
+                motion:customDimension="@dimen/_2ssp" />
         </Constraint>
 
         <Constraint

@@ -14,4 +14,17 @@ public class Constants {
     public static final String CURRENT_FRIEND_CHAT = "current_friend_chat";
     public static final String CURRENT_FRIEND_TOKEN = "current_friend_token";
     public static final String OPEN_CHAT = "open_chat";
+    public static final String ACCEPT_STATE = "accept_state";
+    public static final String REJECT_STATE = "reject_state";
+    public static final String END_STATE = "end_state";
+    public static final String MY_TOKEN = "my_token";
+    public static final String RINGING_STATE = "ringing_state";
+    public static final int CALL_TIME_OUT = 10000;
+    public static final String VOICE_CALL = "voice_call";
+    public static final String VIDEO_CALL = "video_call";
+    public static final String USER_NAME = "user_name";
+    public static final String BIRTH_DATE = "birth_date";
+    public static final String PROFILE_IMAGE_URL = "profile";
+    public static final String IS_SIGNED = "is_signed";
+    public static final String IS_MAIN = "first_opening";
 }

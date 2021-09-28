@@ -1,5 +1,6 @@
 package com.example.whatsup.POJO.FCM;
 
+import com.example.whatsup.POJO.Classes.PushedCall;
 import com.example.whatsup.POJO.Classes.PushedNotification;
 import com.example.whatsup.POJO.Constants;
 
@@ -11,7 +12,13 @@ import retrofit2.http.POST;
 
 public interface FCMApi {
 
-    @Headers({"Authorization: key=" + Constants.SERVER_KEY,"Content-Type: " + Constants.CONTENT_TYPE})
+    @Headers({"Authorization: key=" + Constants.SERVER_KEY, "Content-Type: " + Constants.CONTENT_TYPE})
     @POST("fcm/send")
     Call<ResponseBody> pushNotification(@Body PushedNotification notification);
+
+    @Headers({"Authorization: key=" + Constants.SERVER_KEY, "Content-Type: " + Constants.CONTENT_TYPE})
+    @POST("fcm/send")
+    Call<ResponseBody> pushCall(@Body PushedCall call);
+
+
 }

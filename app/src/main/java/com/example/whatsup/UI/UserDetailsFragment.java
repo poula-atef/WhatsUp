@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Classes.User;
+import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentUserDetailsBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,14 +50,14 @@ public class UserDetailsFragment extends Fragment {
                                 binding.birthDate.setText(user.getBirthDate());
                                 binding.usernameDetails.setText(user.getUserName());
                                 Glide.with(UserDetailsFragment.this).load(user.getImageUrl()).into(binding.imgPicker);
-                                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString("profile",user.getImageUrl()).apply();
+                                PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putString(Constants.PROFILE_IMAGE_URL, user.getImageUrl()).apply();
                                 found = true;
                                 break;
                             }
                         }
-                        if(!found){
+                        if (!found) {
                             String phone = FirebaseAuth.getInstance().getCurrentUser().getPhoneNumber();
-                            String imageUrl = PreferenceManager.getDefaultSharedPreferences(getContext()).getString("profile", "?");
+                            String imageUrl = PreferenceManager.getDefaultSharedPreferences(getContext()).getString(Constants.PROFILE_IMAGE_URL, "?");
 
                             binding.phoneDetails.setText(phone);
                             if (!imageUrl.equals("?"))

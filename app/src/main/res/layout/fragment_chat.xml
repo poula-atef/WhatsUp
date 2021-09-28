@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -111,10 +110,10 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_2sdp"
         android:text="@string/sample_name"
         android:textColor="@color/white"
-        android:textSize="@dimen/_25ssp"
-        android:layout_marginStart="@dimen/_2sdp"
+        android:textSize="@dimen/_22ssp"
         app:layout_constraintBottom_toBottomOf="@id/frameLayout2"
         app:layout_constraintLeft_toRightOf="@id/frameLayout2"
         app:layout_constraintTop_toTopOf="@id/frameLayout2"
@@ -126,11 +125,30 @@
         android:layout_height="wrap_content"
         android:text="last seen in augast"
         android:textColor="@color/white"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="@dimen/_10ssp"
         app:layout_constraintBottom_toBottomOf="@+id/frameLayout2"
         app:layout_constraintStart_toStartOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/username" />
 
+    <ImageView
+        android:id="@+id/video_call"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/ic_video"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/last_seen"
+        app:layout_constraintRight_toLeftOf="@id/voice_call"
+        app:layout_constraintTop_toTopOf="@id/username" />
+
+    <ImageView
+        android:id="@+id/voice_call"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/ic_call"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/video_call"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/video_call" />
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

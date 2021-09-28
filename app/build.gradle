@@ -5,12 +5,13 @@ plugins {
 
 
 android {
-    compileSdk 31
+    compileSdkVersion 29
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.example.whatsup"
-        minSdk 21
-        targetSdk 31
+        minSdkVersion 23
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -31,8 +32,6 @@ android {
     buildFeatures{
         viewBinding = true
     }
-    compileSdkVersion 31
-    buildToolsVersion '30.0.2'
 
 }
 //apply plugin: "androidx.navigation.safeargs"
@@ -71,6 +70,7 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
 
+    implementation ('org.jitsi.react:jitsi-meet-sdk:2.9.0') { transitive = true }
 
 
 }

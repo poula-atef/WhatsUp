@@ -11,8 +11,13 @@ public class Friend {
     public Friend() {
     }
 
-    public Friend(String userName) {
+    public Friend(String senderId, String userName, String profileImageUrl, int seen, String lastMessage, String lastDate) {
+        this.senderId = senderId;
         this.userName = userName;
+        this.profileImageUrl = profileImageUrl;
+        this.seen = seen;
+        this.lastMessage = lastMessage;
+        this.lastDate = lastDate;
     }
 
     public String getUserName() {

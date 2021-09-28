@@ -1,6 +1,7 @@
 package com.example.whatsup.UI;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter;
 import com.example.whatsup.POJO.Adapters.SuggestFriendAdapter.onItemClickListener;
 import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.User;
+import com.example.whatsup.POJO.Constants;
 import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +48,10 @@ public class MainFragment extends Fragment implements onItemClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentMainBinding.inflate(inflater);
+
+
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_SIGNED,true).apply();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_MAIN, true).apply();
 
         friendAdapter = new SuggestFriendAdapter();
         binding.recFriends.setHasFixedSize(true);
@@ -178,6 +184,7 @@ public class MainFragment extends Fragment implements onItemClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_MAIN, false).apply();
         binding = null;
         messageAdapter = null;
         friendAdapter = null;
