@@ -582,8 +582,8 @@ public class WhatsUpUtils {
 
     public static void determineStartFragment(Context context, View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-//        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Constants.IS_MAIN, false)) TODO you have to re-uncomment this if statement
-//            return;
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(Constants.IS_MAIN, false))
+            return;
         if (auth.getCurrentUser() != null) {
             if (checkDataComplete(context)) {
                 Navigation.findNavController(view).navigate(R.id.action_splashFragment_to_userDetailsFragment);

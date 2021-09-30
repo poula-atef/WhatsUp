@@ -17,8 +17,6 @@ import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Classes.Friend;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.R;
-import com.example.whatsup.UI.ChatFragment;
-import com.example.whatsup.UI.MainFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,10 +53,9 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
             holder.message.setText(friends.get(position).getLastMessage());
             holder.message.setVisibility(View.VISIBLE);
             holder.imgMessage.setVisibility(View.GONE);
-            if(friends.get(position).getSeen() == 1){
+            if (friends.get(position).getSeen() == 1) {
                 holder.message.setTypeface(null, Typeface.BOLD);
-            }
-            else{
+            } else {
                 holder.message.setTypeface(null, Typeface.NORMAL);
             }
         } else {
@@ -103,11 +100,11 @@ public class FriendsMessagesAdapter extends RecyclerView.Adapter<FriendsMessages
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot shot : snapshot.getChildren()){
-                        if(shot.getKey().equals(friendsIds.get(getAdapterPosition()))){
+                    for (DataSnapshot shot : snapshot.getChildren()) {
+                        if (shot.getKey().equals(friendsIds.get(getAdapterPosition()))) {
                             Bundle bundle = new Bundle();
-                            bundle.putParcelable("user",shot.getValue(User.class));
-                            Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_chatFragment,bundle);
+                            bundle.putParcelable("user", shot.getValue(User.class));
+                            Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_chatFragment, bundle);
                             break;
                         }
                     }

@@ -81,7 +81,7 @@ public class ChatFragment extends Fragment {
                         , binding.etMessage.getText().toString(), false, WhatsUpUtils.getCurrentTimeFormat(), "", 1
                         , currentUser.getPhoneNumber(), currentUser.getImageUrl(), currentUser.getUserName());
 
-                WhatsUpUtils.sendMessage(message, getContext(), user,currentUser);
+                WhatsUpUtils.sendMessage(message, getContext(), user, currentUser);
                 binding.etMessage.getText().clear();
             }
         });
@@ -97,11 +97,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("call_type","Video Call");
-                bundle.putString("receiver_token",user.getToken());
-                bundle.putString("receiver_name",user.getUserName());
-                bundle.putString("receiver_number",user.getPhoneNumber());
-                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment,bundle);
+                bundle.putString("call_type", "Video Call");
+                bundle.putString("receiver_token", user.getToken());
+                bundle.putString("receiver_name", user.getUserName());
+                bundle.putString("receiver_number", user.getPhoneNumber());
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment, bundle);
             }
         });
 
@@ -109,11 +109,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
-                bundle.putString("call_type","Voice Call");
-                bundle.putString("receiver_token",user.getToken());
-                bundle.putString("receiver_name",user.getUserName());
-                bundle.putString("receiver_number",user.getPhoneNumber());
-                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment,bundle);
+                bundle.putString("call_type", "Voice Call");
+                bundle.putString("receiver_token", user.getToken());
+                bundle.putString("receiver_name", user.getUserName());
+                bundle.putString("receiver_number", user.getPhoneNumber());
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_chatFragment_to_outGoingCallFragment, bundle);
             }
         });
 

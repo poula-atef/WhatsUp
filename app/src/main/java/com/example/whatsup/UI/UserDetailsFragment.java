@@ -1,20 +1,17 @@
 package com.example.whatsup.UI;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.POJO.Constants;
-import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentUserDetailsBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;

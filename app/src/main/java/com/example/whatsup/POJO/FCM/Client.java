@@ -10,7 +10,6 @@ import androidx.navigation.Navigation;
 import com.example.whatsup.POJO.Classes.CallData;
 import com.example.whatsup.POJO.Classes.PushedCall;
 import com.example.whatsup.POJO.Constants;
-import com.example.whatsup.POJO.WhatsUpUtils;
 import com.example.whatsup.R;
 
 import okhttp3.ResponseBody;
@@ -61,7 +60,7 @@ public class Client {
     public static void setTimerForEndCall(String token, View view) {
         if (handler == null)
             handler = new Handler();
-        if(runnable == null)
+        if (runnable == null)
             runnable = new Runnable() {
                 @Override
                 public void run() {

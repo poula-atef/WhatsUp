@@ -1,6 +1,5 @@
 package com.example.whatsup.POJO.FCM;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -87,7 +86,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 Client.startMediaPlayer(getApplicationContext());
 
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("call",true).apply();
+                PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("call", true).apply();
 
                 new NavDeepLinkBuilder(getApplicationContext())
                         .setGraph(R.navigation.whatsup_nav)
@@ -134,7 +133,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     bundle.putString("receiver_token", message.getData().get("senderToken"));
                     bundle.putString("state", Constants.RINGING_STATE);
 
-                    PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("call",true).apply();
+                    PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("call", true).apply();
 
                     new NavDeepLinkBuilder(getApplicationContext())
                             .setGraph(R.navigation.whatsup_nav)

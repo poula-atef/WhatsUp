@@ -38,7 +38,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
             WhatsUpUtils.markMessagesAsSeen(FirebaseAuth.getInstance().getCurrentUser().getUid(), senderId);
             WhatsUpUtils.markMessagesAsSeen(senderId, FirebaseAuth.getInstance().getCurrentUser().getUid());
-            WhatsUpUtils.closeAnyNotification(context,intent.getIntExtra("notification_id", 1));
+            WhatsUpUtils.closeAnyNotification(context, intent.getIntExtra("notification_id", 1));
 
         } else if (intent.getAction().equals(Constants.REPLAY)) {
 
@@ -70,7 +70,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 .push()
                 .setValue(new Message(FirebaseAuth.getInstance().getCurrentUser().getUid()
                         , senderId, bundle.getString(Constants.REPLAY_RESULT_KEY), false, WhatsUpUtils.getCurrentTimeFormat(), "", 2
-                        ,String.valueOf(bundle.getLong("senderNumber")),bundle.getString("imgUrl"),bundle.getString("title")));
+                        , String.valueOf(bundle.getLong("senderNumber")), bundle.getString("imgUrl"), bundle.getString("title")));
 
         FirebaseDatabase
                 .getInstance()
@@ -80,7 +80,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
                 .push()
                 .setValue(new Message(FirebaseAuth.getInstance().getCurrentUser().getUid()
                         , senderId, bundle.getString(Constants.REPLAY_RESULT_KEY), false, WhatsUpUtils.getCurrentTimeFormat(), "", 2
-                        ,String.valueOf(bundle.getLong("senderNumber")),bundle.getString("imgUrl"),bundle.getString("title")));
+                        , String.valueOf(bundle.getLong("senderNumber")), bundle.getString("imgUrl"), bundle.getString("title")));
 
         makeFirebaseReferenceInstance(FirebaseAuth.getInstance().getCurrentUser().getUid(), senderId)
                 .child("seen")
@@ -116,7 +116,7 @@ public class NotificationBroadcastReceiver extends BroadcastReceiver {
 
         WhatsUpUtils.markMessagesAsSeen(FirebaseAuth.getInstance().getCurrentUser().getUid(), senderId);
         WhatsUpUtils.markMessagesAsSeen(senderId, FirebaseAuth.getInstance().getCurrentUser().getUid());
-        WhatsUpUtils.closeAnyNotification(context,intent.getIntExtra("notification_id", 1));
+        WhatsUpUtils.closeAnyNotification(context, intent.getIntExtra("notification_id", 1));
     }
 
 }

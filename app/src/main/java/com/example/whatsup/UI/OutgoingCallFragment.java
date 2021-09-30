@@ -1,15 +1,14 @@
 package com.example.whatsup.UI;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import com.example.whatsup.POJO.Classes.CallData;
 import com.example.whatsup.POJO.Classes.PushedCall;
@@ -85,7 +84,7 @@ public class OutgoingCallFragment extends Fragment {
             binding.callType.setImageResource(R.drawable.ic_video);
         if (bundle.getString("state") != null) {
             binding.state.setText("Ringing..");
-            Client.setTimerForEndCall(token,binding.getRoot());
+            Client.setTimerForEndCall(token, binding.getRoot());
             return;
         }
         makeTheCall(receiverName, receiverNumber, callType, myToken, token);

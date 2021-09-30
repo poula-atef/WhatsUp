@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
 
         FirebaseMessaging.getInstance().subscribeToTopic(Constants.TOPIC);
 
-        WhatsUpUtils.determineStartFragment(this,binding.getRoot());
+        WhatsUpUtils.determineStartFragment(this, binding.getRoot());
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString(Constants.MY_TOKEN,task.getResult()).apply();
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this).edit().putString(Constants.MY_TOKEN, task.getResult()).apply();
             }
         });
 
@@ -59,9 +59,8 @@ public class MainActivity extends AppCompatActivity implements OnChildChangeList
     @Override
     protected void onResume() {
         super.onResume();
-        WhatsUpUtils.checkNotificationIntent(this,binding.getRoot());
+        WhatsUpUtils.checkNotificationIntent(this, binding.getRoot());
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)

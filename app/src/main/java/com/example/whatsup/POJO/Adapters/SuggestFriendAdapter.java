@@ -28,7 +28,7 @@ public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdap
     @Override
     public SuggestFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new SuggestFriendViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_small_item,parent,false));
+        return new SuggestFriendViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.friend_small_item, parent, false));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdap
 
     @Override
     public int getItemCount() {
-        if(users == null)
+        if (users == null)
             return 0;
         return users.size();
 
@@ -63,18 +63,21 @@ public class SuggestFriendAdapter extends RecyclerView.Adapter<SuggestFriendAdap
         this.listener = listener;
     }
 
-    public interface onItemClickListener{
+    public interface onItemClickListener {
         void onitemClick(User user);
     }
+
     public class SuggestFriendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView icon;
         TextView name;
+
         public SuggestFriendViewHolder(@NonNull View itemView) {
             super(itemView);
             icon = itemView.findViewById(R.id.img);
             name = itemView.findViewById(R.id.name);
             itemView.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View view) {
             listener.onitemClick(users.get(getAdapterPosition()));

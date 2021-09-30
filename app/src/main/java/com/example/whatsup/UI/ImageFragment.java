@@ -1,15 +1,13 @@
 package com.example.whatsup.UI;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
-import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentImageBinding;
 
 

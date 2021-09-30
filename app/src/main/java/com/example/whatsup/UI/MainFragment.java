@@ -50,7 +50,7 @@ public class MainFragment extends Fragment implements onItemClickListener {
         binding = FragmentMainBinding.inflate(inflater);
 
 
-        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_SIGNED,true).apply();
+        PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_SIGNED, true).apply();
         PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(Constants.IS_MAIN, true).apply();
 
         friendAdapter = new SuggestFriendAdapter();
@@ -172,8 +172,8 @@ public class MainFragment extends Fragment implements onItemClickListener {
     @Override
     public void onitemClick(User user) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable("user",user);
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_mainFragment_to_chatFragment,bundle);
+        bundle.putParcelable("user", user);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.action_mainFragment_to_chatFragment, bundle);
     }
 
     public interface OnChildChangeListener {

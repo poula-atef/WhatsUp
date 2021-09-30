@@ -9,11 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.ActionOnlyNavDirections;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.example.whatsup.POJO.Classes.User;
 import com.example.whatsup.R;
 import com.example.whatsup.databinding.FragmentConfirmationBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,10 +19,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class ConfirmationFragment extends Fragment {
